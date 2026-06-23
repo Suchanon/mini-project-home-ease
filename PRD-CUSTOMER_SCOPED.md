@@ -40,6 +40,8 @@ users (1) ───────────────< bookings (N) >───
                              ▼ (1)
                          providers (N) ───< provider_skills >─── (N) categories
 
+1 -> N <- 1 ตัวนี้แหละ คือท่ามาตรฐานใน Database ที่ใช้สำหรับสร้างความสัมพันธ์แบบ N:M
+categories (1) ───< provider_skills (N) >─── (1) providers
 ```
 
 ---
