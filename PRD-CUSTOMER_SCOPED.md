@@ -39,9 +39,24 @@ users (1) ───────────────< bookings (N) >───
                              │
                              ▼ (1)
                          providers (N) ───< provider_skills >─── (N) categories
-
+---
 1 -> N <- 1 ตัวนี้แหละ คือท่ามาตรฐานใน Database ที่ใช้สำหรับสร้างความสัมพันธ์แบบ N:M
 categories (1) ───< provider_skills (N) >─── (1) providers
+---
+categories (1) 💡 (หมวดหมู่หลัก เช่น งานไฟฟ้า)
+        │
+        ├──────────────────────────────────────┐
+        │ (1)                                  │ (1)
+        ▼ (N)                                  ▼ (N)
+     services (1)                       provider_skills (ตารางกลาง)
+  (บริการย่อย เช่น ล้างแอร์)                     ▲ (N)
+        │                                      │ (1)
+        ▼ (N)                                  │
+     bookings (N) ◄─────────────────────── providers (ช่าง)
+        ▲
+        │ (N)
+        │ (1)
+      users (ลูกค้า)
 ```
 
 ---
