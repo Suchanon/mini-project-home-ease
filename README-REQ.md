@@ -61,17 +61,3 @@ A single authenticated admin interface that handles the entire platform. No sepa
 - See which provider is assigned to each booking.
 
 ---
-
-## Technical Stack
-
-| Layer | Requirement |
-|---|---|
-| Frontend | TypeScript + React (**Next.js strongly preferred**) |
-| Styling | Any CSS library/framework of your choice — **TailwindCSS**, **shadcn/ui**, Chakra UI, MUI, CSS Modules, etc. are all acceptable |
-| Backend | **Laravel (PHP)** *or* **NestJS (Node.js)** |
-| Database | PostgreSQL |
-| DevOps | Dockerized — must run with a single `docker-compose up` |
-
-You may add reasonable supporting libraries (validation, ORM, auth, testing) of your choice. Please justify any major architectural decisions in your write-up.
-
----
