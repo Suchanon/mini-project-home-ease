@@ -27,3 +27,27 @@
     3.  `providers` (ตารางแม่ช่าง)
     4.  `provider_skills` (ตารางกลางเชื่อม Many-to-Many ของ categories และ providers)
     5.  `bookings` (ขึ้นกับ users, services, providers)
+
+### Step 2: Models & Relationships Setup
+**วันที่บันทึก:** 2026-06-23
+
+#### 1. วิธีการทำและการเปลี่ยนแปลงโครงสร้างโค้ด
+*   สร้างโมเดล `Category`, `Service`, `Provider`, และ `Booking` เพื่อเป็นตัวแทนของตารางหลักในระดับ Application Logic
+*   กำหนดฟิลด์ `Fillable` โดยอิงตามสถาปัตยกรรม PHP 8 Attribute `#[Fillable([...])]` เพื่อความสม่ำเสมอ (Conventions) กับเทมเพลตเริ่มต้นของคลาส `User`
+*   เขียนฟังก์ชันความสัมพันธ์ของโมเดลตามทิศทางการไหลของข้อมูล:
+    *   `User` (HasMany `Booking`)
+    *   `Category` (HasMany `Service`, BelongsToMany `Provider` ผ่านตารางกลาง `provider_skills`)
+    *   `Service` (BelongsTo `Category`, HasMany `Booking`)
+    *   `Provider` (BelongsToMany `Category` ผ่านตารางกลาง `provider_skills`, HasMany `Booking`)
+    *   `Booking` (BelongsTo `User`, `Service`, `Provider`)
+
+#### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
+*   **การใส่ Foreign Keys ใน `Fillable` ของ `Booking`:** จำเป็นต้องใส่ `user_id`, `service_id`, และ `provider_id` ลงในรายชื่อที่อนุญาตแบบ Mass-assignment เพื่อรองรับการจองผ่านคำสั่งย่อในหลังบ้าน โดยไม่ต้องเสียเวลาประกาศตัวแปรอัปเดตทีละบรรทัด
+*   **การใช้ PHP 8 Attributes:** เลือกใช้ `#[Fillable]` แทนการระบุตัวแปรคลาสแบบดั้งเดิม (`protected $fillable`) เพื่อล้อไปกับสไตล์โค้ดใหม่ของระบบ Laravel 11/13 ในโปรเจกต์นี้
+
+#### 3. การวางแผนแก้ปัญหาด้านความปลอดภัย (Security Planning)
+*   **ประเด็นความเสี่ยง:** การมีคีย์นอก เช่น `user_id` อยู่ใน `Fillable` อาจนำไปสู่ช่องโหว่ความปลอดภัยที่แฮกเกอร์แอบแนบ ID ลูกค้าคนอื่นมาเพื่อสร้างใบจองให้คนอื่นได้ (Overposting Vulnerability)
+*   **แผนการรับมือ (จะทำใน Phase 4):**
+    1.  ใน Controller เราจะล็อกคีย์ `user_id` จาก Session/Token ของผู้ใช้ที่ล็อกอินจริง ๆ เท่านั้น (เช่น ใช้คำสั่ง `$request->user()->bookings()->create(...)`)
+    2.  ใช้ Form Requests ในการ Validation คัดกรองและบังคับคู่ช่างกับประเภทบริการให้ถูกต้องก่อนจะยอมให้บันทึกข้อมูล
+
