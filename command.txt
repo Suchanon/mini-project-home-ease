@@ -1,0 +1,1 @@
+use the [mcp_config.json](file;file:///Users/alex_m3/.gemini/config/mcp_config.json) laravel-boost and my-php-mcp-server i want you to review [PRD-CUSTOMER_SCOPED.md](file;file:///Users/alex_m3/Herd/mini-project/PRD-CUSTOMER_SCOPED.md)[README-REQ.md](file;file:///Users/alex_m3/Herd/mini-project/README-REQ.md)  
