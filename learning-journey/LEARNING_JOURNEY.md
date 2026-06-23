@@ -51,3 +51,28 @@
     1.  ใน Controller เราจะล็อกคีย์ `user_id` จาก Session/Token ของผู้ใช้ที่ล็อกอินจริง ๆ เท่านั้น (เช่น ใช้คำสั่ง `$request->user()->bookings()->create(...)`)
     2.  ใช้ Form Requests ในการ Validation คัดกรองและบังคับคู่ช่างกับประเภทบริการให้ถูกต้องก่อนจะยอมให้บันทึกข้อมูล
 
+### Step 3: Database Factories & Seeders Setup
+**วันที่บันทึก:** 2026-06-23
+
+#### 1. วิธีการทำและการเปลี่ยนแปลงโครงสร้างโค้ด
+*   สร้าง Seeder `CategoryAndServiceSeeder` เพื่อลงทะเบียนข้อมูลแบบคงที่ (Lookup Data) เช่น หมวดหมู่ไฟฟ้า (Electrical), ประปา (Plumbing), แอร์ (AC Repair) และบริการย่อยของแต่ละหมวดหมู่พร้อมราคาฐาน
+*   สร้าง Factory `ProviderFactory` สำหรับสุ่มฟิลด์ช่าง (ชื่อ, เบอร์โทร, สถานะการทำงาน, และคะแนนเฉลี่ยเริ่มต้น)
+*   ใน `DatabaseSeeder.php` เขียนคำสั่งรัน Seeder และ Factory โดยมีกระบวนการจับคู่ทักษะช่างแบบสุ่ม 1-2 หมวดหมู่ต่อคนผ่านตาราง Pivot:
+    ```php
+    Provider::factory(10)->create()->each(function (Provider $provider) use ($categories) {
+        $provider->categories()->attach(
+            $categories->random(rand(1, 2))->pluck('id')->toArray()
+        );
+    });
+    ```
+
+#### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
+*   **การจับคู่ความสัมพันธ์แบบ N:M ใน Seeder:** เลือกใช้วิธีรันโมเดลหลักช่าง (`Provider`) ขึ้นมาก่อน จากนั้นดึงโมเดลหมวดหมู่ทั้งหมดมาสุ่มผ่านเมธอด `random(rand(1, 2))` และใช้คำสั่ง `attach()` ของ Eloquent ในการเพิ่มเรคคอร์ดลงในตารางกลาง (`provider_skills`) โดยตรง
+*   **การกำหนดคะแนนเริ่มต้นของช่าง:** สุ่มตัวเลขทศนิยมระหว่าง 3.5 ถึง 5.0 ดาว เพื่อให้เวลาดึงรายชื่อช่างไปโชว์ใน Catalogue คะแนนดูสมเหตุสมผลและสมจริง
+
+#### 3. การแก้ปัญหาเฉพาะหน้า (Troubleshooting)
+*   **ปัญหาที่พบ:** เกิดข้อผิดพลาด `BadMethodCallException: Call to undefined method App\Models\Provider::factory()` ขณะทำการสั่งรันคำสั่ง `--seed`
+*   **สาเหตุ:** โมเดลที่เราสร้างขึ้นใหม่ในสเตปที่ 2 (เช่น `Provider`, `Category`, `Service`, `Booking`) ยังไม่ได้นำเข้าเทรต (Trait) `HasFactory` ทำให้ระบบ Eloquent ไม่พบฟังก์ชันเรียกใช้โมเดลคู่โรงงาน (Factory class)
+*   **การแก้ไข:** ทำการแก้ไขคลาสโมเดลทุกตัวให้ `use Illuminate\Database\Eloquent\Factories\HasFactory;` และประกาศใช้งาน `use HasFactory;` ภายในคลาส หลังจากนั้นรัน `migrate:fresh --seed` พบว่าผ่านทั้งหมดเรียบร้อย
+
+
