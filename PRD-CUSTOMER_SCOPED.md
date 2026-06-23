@@ -113,7 +113,6 @@ categories (1) 💡 (หมวดหมู่หลัก เช่น งาน
 | `id` | BigInt (Auto Increments) | Primary Key | ID ของช่าง |
 | `name` | String (varchar) | Not Null | ชื่อช่าง |
 | `phone` | String (varchar) | Not Null | เบอร์ติดต่อช่าง |
-| `avatar_url` | String (varchar) | Nullable | รูปโปรไฟล์ช่าง |
 | `status` | Enum | Not Null, Default: 'available' | สถานะช่าง: `available`, `unavailable`, `on_leave` |
 | `rating` | Decimal (3, 2) | Nullable, Default: 5.00 | คะแนนรีวิวเฉลี่ยเอาไว้โชว์ลูกค้า |
 | `created_at` / `updated_at` | Timestamp | Nullable | วันเวลาระบบ |
