@@ -1,8 +1,14 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatalogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// Catalog Routes (Public)
+Route::get('/categories', [CatalogController::class, 'getCategories']);
+Route::get('/services', [CatalogController::class, 'getServices']);
+Route::get('/services/{service_id}/providers', [CatalogController::class, 'getServiceProviders']);
 
 // public
 Route::post('/register', [AuthController::class, 'register']);
