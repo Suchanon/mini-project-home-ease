@@ -28,6 +28,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Generate a standardized authentication token for the user.
+     */
+    public function generateAuthToken(?int $expiresInMinutes = 60): string
+    {
+        $expiresAt = $expiresInMinutes ? now()->addMinutes($expiresInMinutes) : null;
+
+        return $this->createToken('auth_token', ['*'], $expiresAt)->plainTextToken;
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

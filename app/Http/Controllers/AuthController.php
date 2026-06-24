@@ -17,6 +17,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:8',
             'phone' => 'nullable|string',
         ]);
+        /** @var User $user */
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -24,7 +25,7 @@ class AuthController extends Controller
             'phone' => $validated['phone'] ?? null,
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->generateAuthToken();
 
         return response()->json([
             'user' => $user,
@@ -47,8 +48,9 @@ class AuthController extends Controller
             ], 401);
         }
 
+        /** @var User $user */
         $user = User::where('email', $validated['email'])->firstOrFail();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->generateAuthToken();
 
         return response()->json([
             'user' => $user,
