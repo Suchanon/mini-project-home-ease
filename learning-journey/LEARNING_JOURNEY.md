@@ -131,6 +131,36 @@
 #### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
 *   **การใช้ Environment Variables ใน Postman:** เพื่อให้คอลเล็กชันสำหรับรันเคสทดสอบนี้เป็นอิสระจากเครื่องนักพัฒนาคนนั้น ๆ (Environment-agnostic) หากทำการย้าย Domain ไปใช้งานบน Staging หรือฐานข้อมูลจำลองอื่น ก็เพียงแค่แก้ไขค่า `BASE_URL` ใน Postman Environment ตัวเดียวโดยไม่ต้องแก้ไขทีละ Request URL
 
+---
+
+## 🗓️ Phase 4: Booking Engine & Authorization Rules
+
+### Step 1: Implementation of Request, Policy, Controller & API Routes
+**วันที่บันทึก:** 2026-06-24
+
+#### 1. วิธีการทำและการเปลี่ยนแปลงโครงสร้างโค้ด
+*   สร้าง [CreateBookingRequest.php](file:///Users/alex_m3/Herd/mini-project/app/Http/Requests/CreateBookingRequest.php) เพื่อทำ Validate ค่าอินพุตก่อนเข้าคอนโทรลเลอร์ (เช่น บังคับวันที่จองห้ามจองย้อนหลังผ่านเงื่อนไข `after:now`)
+*   สร้าง [BookingPolicy.php](file:///Users/alex_m3/Herd/mini-project/app/Policies/BookingPolicy.php) ควบคุมสิทธิ์เข้าถึง:
+    *   `view`: ลูกค้าดูได้เฉพาะใบจองที่เป็นของตัวเองเท่านั้น
+    *   `cancel`: ยกเลิกได้เฉพาะใบจองของตัวเอง และต้องอยู่ภายใต้สถานะ `pending` หรือ `accepted` เท่านั้น
+*   สร้าง [BookingController.php](file:///Users/alex_m3/Herd/mini-project/app/Http/Controllers/BookingController.php) สำหรับบริหารจัดการ Logic ธุรกรรมการจอง:
+    *   ตรวจสอบช่างต้องไม่ติดงาน (`status === 'available'`)
+    *   ตรวจสอบประเภทช่างว่ามีทักษะสอดคล้องกับหมวดหมู่บริการจริงหรือไม่ ผ่านคำสั่ง `exists()` บน Pivot Table `provider_skills`
+    *   บันทึกข้อมูลแบบ **Price Snapshot (`price_charged`)** ป้องกันปัญหาการแก้ไขราคาในอนาคตกระทบยอดเดิม
+*   ตั้งค่า Endpoint ใน [api.php](file:///Users/alex_m3/Herd/mini-project/routes/api.php) ภายใต้กลุ่ม Protected API ด้วย Middleware `auth:sanctum`
+*   เขียนชุดทดสอบ [BookingTest.php](file:///Users/alex_m3/Herd/mini-project/tests/Feature/BookingTest.php) ทดสอบครอบคลุมเงื่อนไขความถูกต้อง ทั้งกรณีผ่าน (Happy Path) และปฏิเสธ (Validation/Policy Failures)
+
+#### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
+*   **การใช้ Facade `Gate::authorize()` แทน `$this->authorize()`:** เนื่องจากโครงสร้าง Controller เริ่มต้นใน Laravel 13 มีลักษณะเรียบง่าย (Lightweight) โดยไม่มีการสั่ง `use AuthorizesRequests;` การเลือกใช้สแตติกเมธอด `Gate::authorize(...)` โดยตรง ช่วยให้โค้ดสะอาดและสอดคล้องกับสถาปัตยกรรมรุ่นใหม่
+*   **การจัดแบ่งหน้าที่ในการ Validation:**
+    *   *Form Request:* ตรวจสอบประเภทข้อมูล รูปแบบวันที่ และความมีอยู่จริงของ ID ในฐานข้อมูล (Structural Validation)
+    *   *Controller:* ตรวจสอบกฎเชิงธุรกิจที่มีความซับซ้อน เช่น ความพร้อมของช่าง และการตรวจสอบสกิลช่างกับหมวดหมู่บริการ (Business-State Validation) เพื่อให้ส่งข้อความ Response ที่อ่านเข้าใจง่ายพร้อมรหัส `422`
+*   **การจัดหมวดหมู่ใน Postman:** ย้าย API ทั้งหมดเข้าไปอยู่ในโฟลเดอร์ย่อย (Authentication, Catalog, Bookings) และกำหนดค่า UUID ให้แต่ละโฟลเดอร์ เพื่อให้ระบบ Postman Collection ทำงานอย่างสมบูรณ์แบบไม่ขัดข้องในการอัปเดตผ่าน API
+
+#### 3. การตรวจสอบความถูกต้อง (Verification)
+*   รันคำสั่ง `php artisan test --compact` ยืนยันว่าการควบคุมความปลอดภัยของตาราง `bookings` และ API ทั้งหมดทำงานได้สมบูรณ์ ผลผ่านการทดสอบ 15 เคส 100% Green
+
+
 
 
 

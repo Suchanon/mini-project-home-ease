@@ -132,3 +132,37 @@
 *   **การนับจำนวนความสัมพันธ์ด้วย `withCount()`:**
     *   ใช้ดึงจำนวนโมเดลลูกย่อยโดยไม่ต้องดาวน์โหลดแถวข้อมูลขึ้นมารอในหน่วยความจำ
     *   ระบบจะทำการ Select คอลัมน์ย่อยเพิ่มเข้ามาเป็น `[relation]_count` (เช่น `services_count`) ให้อัตโนมัติใน SQL Query เดียว ช่วยประหยัด Memory และ IO อย่างมาก
+
+---
+
+## 🔒 7. ระบบการจองและสิทธิ์ความปลอดภัยระดับ Resource (Booking Engine & Resource Policies)
+
+ในการพัฒนาโมดูลการจองบริการและตรวจสอบความถูกต้อง มีหัวข้อทางเทคนิคที่สามารถเชื่อมโยงแนวคิดระหว่าง NestJS และ Laravel ดังนี้:
+
+### A. เปรียบเทียบ Validation Layer: NestJS DTO Pipes vs Laravel Form Requests
+
+*   **NestJS (ValidationPipe + class-validator):**
+    *   สร้างคลาส DTO (Data Transfer Object) ตกแต่งฟิลด์ด้วย Decorator (เช่น `@IsString()`, `@IsDate()`) และนำมาสแกนผ่าน `ValidationPipe` ในระดับ Global หรือ Controller Guard
+*   **Laravel (Form Requests):**
+    *   สกัด (Extract) กฎการ Validate ออกจากคอนโทรลเลอร์ไปไว้ในคลาส Request เฉพาะ เช่น `CreateBookingRequest`
+    *   **ข้อดี:** ตัวคอนโทรลเลอร์มีความ "Skinny" (ผอมบาง) มากขึ้น โฟกัสเฉพาะ Logic ธุรกิจ และควบคุมการอนุญาตสิทธิ์ระดับ Http Request ได้ในเมธอด `authorize()` ของ Form Request ทันที
+    *   ตัวอย่างกฎยอดนิยม: `'appointment_datetime' => 'required|date|after:now'` การันตีเวลาจองต้องไม่ย้อนหลัง ณ เวลาปัจจุบัน
+
+### B. สถาปัตยกรรมสิทธิ์ความปลอดภัย: NestJS Guards/CASL vs Laravel Policies
+
+*   **NestJS (CASL / Resource Guards):**
+    *   ผู้ใช้นิยมสร้าง Custom Guard (เช่น `OwnerGuard` หรือ `PoliciesGuard`) ร่วมกับ CASL เพื่อตรวจสอบว่า `user.id === resource.userId` โดยบางครั้งต้องคิวรีข้อมูลขึ้นมาเช็คระดับ Controller เสมอ
+*   **Laravel (Eloquent Policies):**
+    *   ผูกการประเมินสิทธิ์เข้ากับ Eloquent Model โดยตรง (เช่น `BookingPolicy` คอยเช็คโมเดล `Booking`)
+    *   สามารถเรียกผ่าน Facade `Gate::authorize('action', $model)` ในคอนโทรลเลอร์
+    *   **Side Effects:** หากสิทธิ์ถูกปฏิเสธ (คืนค่า `false` ใน Policy) Laravel จะทริกเกอร์ `AuthorizationException` โดยอัตโนมัติ และเซิร์ฟเวอร์จะคืนค่า `403 Forbidden` ให้ฝั่ง Client ทันทีโดยที่เราไม่ต้องเขียนโค้ด Try/Catch
+    *   การนำมาประยุกต์ใช้ในโปรเจกต์:
+        *   `view`: ตรวจสอบสิทธิ์เจ้าของใบจอง (`$user->id === $booking->user_id`)
+        *   `cancel`: ตรวจสอบสิทธิ์ความเป็นเจ้าของ **ควบคู่กับสถานะของใบจอง** (ต้องเป็น `pending` หรือ `accepted` เท่านั้น ถึงจะยกเลิกบริการได้)
+
+### C. การรักษาสถานะทางบัญชี (Price Snapshot Pattern)
+
+*   **ปัญหาแบบดั้งเดิม:** หากเราบันทึกใบจองโดยวิธีอ้างอิงตรงไปยัง `services.base_price` (ผ่าน Foreign Key เท่านั้น) เมื่อวันเวลาผ่านไปและแอดมินระบบเข้ามาปรับปรุงราคาฐาน (Base Price) ของบริการนั้นๆ รายงานการเงินประวัติการจองเดิมจะคลาดเคลื่อนและไม่สอดคล้องกับค่าใช้จ่ายจริงที่ลูกค้าเคยชำระ
+*   **แนวทางการแก้ไข (Price Snapshot):**
+    *   ขณะสร้างบันทึกในโมเดล `Booking` เราจะคัดลอกค่าราคาปัจจุบันจาก `Service` มาเก็บบันทึกเดี่ยวๆ ในคอลัมน์ `price_charged` ของตาราง `bookings`
+    *   **ประโยชน์:** ประวัติราคาถูกบันทึกแช่แข็ง (Freeze State) ณ วันเวลาที่เกิดธุรกรรม ทำให้ไม่ได้รับผลกระทบจากการปรับแต่งโครงสร้างราคาในอนาคต (Immutable Financial Audit Trail)
