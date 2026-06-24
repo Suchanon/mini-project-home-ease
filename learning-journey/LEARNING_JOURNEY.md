@@ -86,9 +86,50 @@
     *   `logout()`: สั่งยกเลิกโทเค็นปัจจุบันที่ผู้ใช้ถืออยู่ผ่าน `$request->user()->currentAccessToken()->delete()`
 *   ตั้งค่าแยกกลุ่ม API Routes ใน [api.php](file:///Users/alex_m3/Herd/mini-project/routes/api.php) โดยใช้ `auth:sanctum` Middleware ในการล็อกสิทธิ์ฟังก์ชัน Logout
 
-#### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
 *   **การเลือกใช้ Laravel Sanctum:** ตัดสินใจเลือกใช้งานเนื่องจากเป็นตัวเบา (Lightweight Token-based Authentication) ที่จัดการโทเค็นฝั่ง API ผ่านฐานข้อมูลตาราง `personal_access_tokens` แทนการถอดถอนและลงนามคีย์ลับขนาดใหญ่แบบ JWT ในฝั่ง NestJS
 *   **การใช้ `Auth::attempt()` ในการยืนยันข้อมูลล็อกอิน:** เลือกใช้เพื่อความสะดวกและปลอดภัย เนื่องจากระบบจะทำการดึงข้อมูลผู้ใช้จากคีย์ระบุอีเมล ค้นหา และทำ Hash Verify ด้วย Bcrypt ในตัวโดยไม่ต้องดึงผู้ใช้มาเช็คเองแมนนวล
+
+---
+
+## 🗃️ Phase 3: Catalog & Browsing Module (Public APIs)
+**วันที่บันทึก:** 2026-06-24
+
+### Step 1: Serialization Layer with API Resources
+#### 1. วิธีการทำและการเปลี่ยนแปลงโครงสร้างโค้ด
+*   สร้างคลาส Resource เพื่อทำหน้าที่จัดรูปแบบการแปลงข้อมูล JSON ได้แก่ [CategoryResource](file:///Users/alex_m3/Herd/mini-project/app/Http/Resources/CategoryResource.php), [ServiceResource](file:///Users/alex_m3/Herd/mini-project/app/Http/Resources/ServiceResource.php), และ [ProviderResource](file:///Users/alex_m3/Herd/mini-project/app/Http/Resources/ProviderResource.php)
+*   เขียนฟังก์ชัน `toArray()` เพื่อกำหนดรูปแบบฟิลด์ที่จะส่งออกไปภายนอก เช่น การแปลงราคาและคะแนนของช่างให้เป็น `float`
+*   ใช้เงื่อนไขการโหลดความสัมพันธ์ เช่น `$this->whenLoaded('category')` และ `$this->whenCounted('services')` เพื่อให้มั่นใจว่าจะไม่มีการคิวรีตารางที่เกี่ยวโยงเกินจำเป็น
+
+#### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
+*   **การแปลงประเภทข้อมูลเป็น Float ใน Resource:** เนื่องจาก SQLite หรือบางไดรเวอร์ฐานข้อมูลอาจอ่านค่าทศนิยมของคอลัมน์ฐานข้อมูล (`base_price`, `rating`) ออกมาเป็น String การบีบบังคับแปลงประเภทข้อมูล (Type Casting) ในชั้น Resource เป็น `(float)` ช่วยการันตีให้ JSON ผลลัพธ์แสดงชนิดข้อมูลตัวเลขที่ถูกต้องเสมอ
+*   **การซ่อน Relationship ทรัพยากรลูกย่อยหากไม่ต้องการโชว์:** ออกแบบให้ความสัมพันธ์ถูกแสดงเฉพาะกรณีที่ Controller สั่ง Eager Load เข้ามาด้วย `whenLoaded` เท่านั้น ซึ่งเป็นแนวทางมาตรฐานในการลดขนาด payload และป้องกันปัญหา N+1 queries
+
+---
+
+### Step 2: CatalogController Development & Optimization
+#### 1. วิธีการทำและการเปลี่ยนแปลงโครงสร้างโค้ด
+*   สร้าง [CatalogController](file:///Users/alex_m3/Herd/mini-project/app/Http/Controllers/CatalogController.php) พร้อมเมธอด:
+    *   `getCategories()`: ดึงหมวดหมู่พร้อมนับจำนวนบริการภายในด้วย `withCount('services')`
+    *   `getServices()`: ค้นหาบริการย่อย รองรับการกรองด้วย `category_id` และคีย์เวิร์ด `search` ผ่านคำสั่ง `$query->when(...)` พร้อมทำ Eager Loading ตาราง `category`
+    *   `getServiceProviders($serviceId)`: ดึงรายชื่อช่างที่เป็น `available` และตรงกับหมวดหมู่ของบริการนั้น ๆ ผ่านคำสั่ง `whereHas('categories')`
+*   ผูกเส้นทางคิวรีเหล่านี้เป็นเส้นทางสาธารณะ (Public) ใน [routes/api.php](file:///Users/alex_m3/Herd/mini-project/routes/api.php)
+
+#### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
+*   **การแก้ปัญหา N+1 คิวรีด้วย Eager Loading และ Relationship Constraints:**
+    *   การทำ `Service::with('category')->get()` ช่วยรวบยอดคำสั่ง SQL ดึงหมวดหมู่ย่อยทั้งหมดมารอไว้ในคราวเดียว แทนการวนลูป Query ทีละแถว
+    *   การตรวจสอบช่างผู้ให้บริการด้วย `whereHas('categories')` ช่วยให้ฐานข้อมูลตรวจสอบความสัมพันธ์ระดับ N:M (Many-to-Many) ค้นหาช่างที่มีทักษะตรงกลุ่มได้ทันทีในคิวรีเดียวโดยไม่ต้องดึงช่างทั้งหมดมาวนลูปเช็คใน PHP
+*   **การแก้ไขปัญหาข้อมูลทดสอบสุ่มไม่พบ (Randomized Seed Data):**
+    *   พบปัญหาคิวรี `GET /api/services/1/providers` คืนค่าเป็น `[]` เนื่องจากระบบสุ่มของ Seeder กำหนดช่างตรงหมวดหมู่ Plumbing (Category 1) ไว้มีสถานะเป็น `on_leave` ทั้งหมด
+    *   แก้ไขเพื่อการทดสอบโดยเขียนคำสั่ง Tinker บังคับให้ช่าง ID 8 มีสถานะเป็น `available` เพื่อยืนยันว่าโค้ดฟังก์ชันค้นหาช่างทำงานได้อย่างสมบูรณ์
+
+---
+
+### Step 3: Postman Portability Optimization
+#### 1. วิธีการทำและการเปลี่ยนแปลงโครงสร้างโค้ด
+*   ปรับเปลี่ยน URL ของ Request ใน Collection **`mini-project`** จาก `http://mini-project.test` มาใช้ตัวแปรสภาพแวดล้อม `{{BASE_URL}}` ทั้งหมด
+
+#### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
+*   **การใช้ Environment Variables ใน Postman:** เพื่อให้คอลเล็กชันสำหรับรันเคสทดสอบนี้เป็นอิสระจากเครื่องนักพัฒนาคนนั้น ๆ (Environment-agnostic) หากทำการย้าย Domain ไปใช้งานบน Staging หรือฐานข้อมูลจำลองอื่น ก็เพียงแค่แก้ไขค่า `BASE_URL` ใน Postman Environment ตัวเดียวโดยไม่ต้องแก้ไขทีละ Request URL
 
 
 
