@@ -152,7 +152,7 @@
 *   เขียนชุดทดสอบ [BookingTest.php](file:///Users/alex_m3/Herd/mini-project/tests/Feature/BookingTest.php) ทดสอบครอบคลุมเงื่อนไขความถูกต้อง ทั้งกรณีผ่าน (Happy Path) และปฏิเสธ (Validation/Policy Failures)
 
 #### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
-*   **การใช้ Facade `Gate::authorize()` แทน `$this->authorize()`:** เนื่องจากโครงสร้าง Controller เริ่มต้นใน Laravel 13 มีลักษณะเรียบง่าย (Lightweight) โดยไม่มีการสั่ง `use AuthorizesRequests;` การเลือกใช้สแตติกเมธอด `Gate::authorize(...)` โดยตรง ช่วยให้โค้ดสะอาดและสอดคล้องกับสถาปัตยกรรมรุ่นใหม่
+*   **การกำหนดสิทธิ์ด้วย Route-level `can` Middleware:** การย้าย Logic การตรวจสอบสิทธิ์ Policy ออกไปไว้นอก Controller โดยใช้ `->middleware('can:view,booking')` และ `->middleware('can:cancel,booking')` ในไฟล์ `routes/api.php` ช่วยทำให้ตัว Controller ทำงานเฉพาะเรื่องธุรกิจและตอบกลับแบบสะอาด (Skinny Controller) อีกทั้งยังรวมศูนย์การประเมินสิทธิ์เส้นทางไว้ที่ไฟล์ Route เพียงจุดเดียวตามแนวทาง Declarative Security
 *   **การจัดแบ่งหน้าที่ในการ Validation และ Rich Domain Model Encapsulation:**
     *   *Form Request:* ตรวจสอบประเภทข้อมูล รูปแบบวันที่ และความมีอยู่จริงของ ID ในฐานข้อมูล (Structural Validation)
     *   *Model (Rich Model):* ย้าย Logic การตรวจสอบความสอดคล้องของหมวดหมู่และสกิลช่างเข้าไปอยู่ในคลาส `Provider` ในรูปแบบของ Helper Method `$provider->hasSkill($categoryId)` เพื่อส่งเสริม Encapsulation และการทำ Unit Testing

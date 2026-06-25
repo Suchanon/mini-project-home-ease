@@ -34,6 +34,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // 🗓️ Booking Module (จัดการการจอง)
     Route::get('/bookings', [BookingController::class, 'index']);                 // ดูประวัติจองของตนเอง
     Route::post('/bookings', [BookingController::class, 'store']);                 // สร้างคำขอจองใหม่
-    Route::get('/bookings/{booking}', [BookingController::class, 'show']);         // ดูรายละเอียดจองเฉพาะใบ
-    Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']); // ยกเลิกการจอง
+    Route::get('/bookings/{booking}', [BookingController::class, 'show'])->middleware('can:view,booking');         // ดูรายละเอียดจองเฉพาะใบ
+    Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->middleware('can:cancel,booking'); // ยกเลิกการจอง
 });

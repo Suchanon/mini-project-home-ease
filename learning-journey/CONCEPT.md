@@ -155,7 +155,9 @@
     *   ผู้ใช้นิยมสร้าง Custom Guard (เช่น `OwnerGuard` หรือ `PoliciesGuard`) ร่วมกับ CASL เพื่อตรวจสอบว่า `user.id === resource.userId` โดยบางครั้งต้องคิวรีข้อมูลขึ้นมาเช็คระดับ Controller เสมอ
 *   **Laravel (Eloquent Policies):**
     *   ผูกการประเมินสิทธิ์เข้ากับ Eloquent Model โดยตรง (เช่น `BookingPolicy` คอยเช็คโมเดล `Booking`)
-    *   สามารถเรียกผ่าน Facade `Gate::authorize('action', $model)` ในคอนโทรลเลอร์
+    *   **แนวทางการเรียกใช้งานมี 2 แบบหลัก:**
+        1.  *Controller-level (`Gate::authorize`):* เรียกผ่าน Facade `Gate::authorize('action', $model)` ภายใน Method ของ Controller (เด่นเรื่องความชัดเจนในไฟล์ตัวมันเอง)
+        2.  *Route-level (`can` middleware):* เรียกผ่าน Route Definition เช่น `->middleware('can:action,route_parameter')` (เด่นเรื่องการทำ Skinny Controller และรวมศูนย์ประเด็นความปลอดภัยไว้ที่ไฟล์ Route - **โปรเจกต์นี้เลือกใช้วิธีนี้สำหรับ API show และ cancel**)
     *   **Side Effects:** หากสิทธิ์ถูกปฏิเสธ (คืนค่า `false` ใน Policy) Laravel จะทริกเกอร์ `AuthorizationException` โดยอัตโนมัติ และเซิร์ฟเวอร์จะคืนค่า `403 Forbidden` ให้ฝั่ง Client ทันทีโดยที่เราไม่ต้องเขียนโค้ด Try/Catch
     *   การนำมาประยุกต์ใช้ในโปรเจกต์:
         *   `view`: ตรวจสอบสิทธิ์เจ้าของใบจอง (`$user->id === $booking->user_id`)

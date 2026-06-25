@@ -10,7 +10,6 @@ use App\Models\Booking;
 use App\Models\Provider;
 use App\Models\Service;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class BookingController extends Controller
 {
@@ -55,7 +54,6 @@ class BookingController extends Controller
 
     public function show(Booking $booking)
     {
-        Gate::authorize('view', $booking);
         $booking->load(['service', 'provider']);
 
         return new BookingResource($booking);
@@ -63,7 +61,6 @@ class BookingController extends Controller
 
     public function cancel(Booking $booking)
     {
-        Gate::authorize('cancel', $booking);
         $booking->update([
             'status' => BookingStatus::Cancelled->value,
         ]);
