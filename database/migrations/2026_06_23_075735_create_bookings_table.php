@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\BookingStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->dateTime('appointment_datetime');
             $table->text('address');
-            $table->enum('status', ['pending', 'accepted', 'in_progress', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', BookingStatus::values())->default(BookingStatus::Pending->value);
             $table->decimal('price_charged', 8, 2);
             $table->timestamps();
         });

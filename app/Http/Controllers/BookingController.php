@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BookingStatus;
 use App\Http\Requests\CreateBookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
@@ -46,7 +47,7 @@ class BookingController extends Controller
             'appointment_datetime' => $request->appointment_datetime,
             'address' => $request->address,
             'price_charged' => $service->base_price, // ราคา Snapshot ณ ปัจจุบัน
-            'status' => 'pending',
+            'status' => BookingStatus::Pending->value,
         ]);
 
         $booking->load(['service', 'provider']);
@@ -66,7 +67,7 @@ class BookingController extends Controller
     {
         Gate::authorize('cancel', $booking);
         $booking->update([
-            'status' => 'cancelled',
+            'status' => BookingStatus::Cancelled->value,
         ]);
         $booking->load(['service', 'provider']);
 

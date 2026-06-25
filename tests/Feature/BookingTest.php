@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\BookingStatus;
 use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Provider;
@@ -177,7 +178,7 @@ test('user can view their own bookings list ordered by latest', function () {
         'appointment_datetime' => now()->addDays(1)->format('Y-m-d H:i:s'),
         'address' => 'Address 1',
         'price_charged' => 500.00,
-        'status' => 'pending',
+        'status' => BookingStatus::Pending,
     ]);
 
     // Move time forward slightly
@@ -191,7 +192,7 @@ test('user can view their own bookings list ordered by latest', function () {
         'appointment_datetime' => now()->addDays(2)->format('Y-m-d H:i:s'),
         'address' => 'Address 2',
         'price_charged' => 500.00,
-        'status' => 'pending',
+        'status' => BookingStatus::Pending,
     ]);
 
     $response = $this->actingAs($user)->getJson('/api/bookings');
@@ -225,7 +226,7 @@ test('user can view their own booking detail', function () {
         'appointment_datetime' => now()->addDays(1)->format('Y-m-d H:i:s'),
         'address' => 'My address',
         'price_charged' => 500.00,
-        'status' => 'pending',
+        'status' => BookingStatus::Pending,
     ]);
 
     $this->actingAs($user)
@@ -260,7 +261,7 @@ test('user cannot view another users booking', function () {
         'appointment_datetime' => now()->addDays(1)->format('Y-m-d H:i:s'),
         'address' => 'Address B',
         'price_charged' => 500.00,
-        'status' => 'pending',
+        'status' => BookingStatus::Pending,
     ]);
 
     // User A attempts to view User B's booking
@@ -290,7 +291,7 @@ test('user can cancel their own booking when status is pending or accepted', fun
         'appointment_datetime' => now()->addDays(1)->format('Y-m-d H:i:s'),
         'address' => 'Address',
         'price_charged' => 500.00,
-        'status' => 'pending',
+        'status' => BookingStatus::Pending,
     ]);
 
     $bookingAccepted = Booking::create([
@@ -301,7 +302,7 @@ test('user can cancel their own booking when status is pending or accepted', fun
         'appointment_datetime' => now()->addDays(1)->format('Y-m-d H:i:s'),
         'address' => 'Address',
         'price_charged' => 500.00,
-        'status' => 'accepted',
+        'status' => BookingStatus::Accepted,
     ]);
 
     // Cancel pending booking
@@ -312,7 +313,7 @@ test('user can cancel their own booking when status is pending or accepted', fun
 
     $this->assertDatabaseHas('bookings', [
         'id' => $bookingPending->id,
-        'status' => 'cancelled',
+        'status' => BookingStatus::Cancelled,
     ]);
 
     // Cancel accepted booking
@@ -323,7 +324,7 @@ test('user can cancel their own booking when status is pending or accepted', fun
 
     $this->assertDatabaseHas('bookings', [
         'id' => $bookingAccepted->id,
-        'status' => 'cancelled',
+        'status' => BookingStatus::Cancelled,
     ]);
 });
 
@@ -348,7 +349,7 @@ test('user cannot cancel booking when not pending or accepted', function () {
         'appointment_datetime' => now()->addDays(1)->format('Y-m-d H:i:s'),
         'address' => 'Address',
         'price_charged' => 500.00,
-        'status' => 'cancelled',
+        'status' => BookingStatus::Cancelled,
     ]);
 
     $this->actingAs($user)
@@ -379,7 +380,7 @@ test('user cannot cancel another users booking', function () {
         'appointment_datetime' => now()->addDays(1)->format('Y-m-d H:i:s'),
         'address' => 'Address B',
         'price_charged' => 500.00,
-        'status' => 'pending',
+        'status' => BookingStatus::Pending,
     ]);
 
     // User A tries to cancel B's booking

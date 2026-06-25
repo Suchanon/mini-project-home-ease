@@ -28,8 +28,17 @@ class DatabaseSeeder extends Seeder
         // 3. ดึงหมวดหมู่ทั้งหมดขึ้นมารอไว้
         $categories = Category::all();
 
-        // 4. สุ่มสร้างช่าง 10 คน และผูกความเชี่ยวชาญแบบสุ่ม 1-2 หมวดหมู่ต่อคน
-        Provider::factory(10)->create()->each(function (Provider $provider) use ($categories) {
+        // 4. สร้างช่างที่ 'available' แน่นอนหมวดหมู่ละ 2 คน (เพื่อให้ทุกบริการมีผู้ให้บริการอย่างน้อย 2 คน)
+        foreach ($categories as $category) {
+            Provider::factory(2)->create([
+                'status' => 'available',
+            ])->each(function (Provider $provider) use ($category) {
+                $provider->categories()->attach($category->id);
+            });
+        }
+
+        // 5. สุ่มสร้างช่างเพิ่มเติมอีก 4 คน เพื่อให้รวมเป็น 10 คน และผูกความเชี่ยวชาญแบบสุ่ม
+        Provider::factory(4)->create()->each(function (Provider $provider) use ($categories) {
             $provider->categories()->attach(
                 $categories->random(rand(1, 2))->pluck('id')->toArray()
             );

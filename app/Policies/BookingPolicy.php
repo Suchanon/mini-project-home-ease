@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\BookingStatus;
 use App\Models\Booking;
 use App\Models\User;
 
@@ -20,6 +21,6 @@ class BookingPolicy
         // 1. ต้องเป็นเจ้าของใบจอง
         // 2. สถานะปัจจุบันต้องเป็น pending หรือ accepted เท่านั้น (จองเสร็จแล้ว/ยกเลิกไปแล้ว ห้ามยกเลิกซ้ำ)
         return $user->id === $booking->user_id
-            && in_array($booking->status, ['pending', 'accepted']);
+            && ($booking->status === BookingStatus::Pending || $booking->status === BookingStatus::Accepted);
     }
 }
