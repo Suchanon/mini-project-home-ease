@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProviderStatus;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProviderResource;
 use App\Http\Resources\ServiceResource;
@@ -37,7 +38,7 @@ class CatalogController extends Controller
     {
         $service = Service::findOrFail($serviceId);
 
-        $providers = Provider::where('status', 'available')
+        $providers = Provider::where('status', ProviderStatus::Available)
             ->whereHas('categories', function ($query) use ($service) {
                 $query->where('categories.id', $service->category_id);
             })

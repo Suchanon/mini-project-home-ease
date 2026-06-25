@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProviderStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone');
-            $table->enum('status',['available', 'unavailable', 'on_leave'])->default('available');
+            $table->enum('status', ProviderStatus::values())->default(ProviderStatus::Available->value);
             $table->decimal('rating', 3, 2)->default(5.0);
             $table->timestamps();
         });

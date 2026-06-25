@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ProviderStatus;
 use App\Models\Provider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +21,7 @@ class ProviderFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'phone' => $this->faker->phoneNumber(),
-            'status' => $this->faker->randomElement(['available', 'unavailable', 'on_leave']),
+            'status' => $this->faker->randomElement(ProviderStatus::cases()),
             'rating' => $this->faker->randomFloat(2, 3.5, 5.0),
         ];
     }

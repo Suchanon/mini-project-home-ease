@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProviderStatus;
 use App\Models\Category;
 use App\Models\Provider;
 use App\Models\User;
@@ -31,7 +32,7 @@ class DatabaseSeeder extends Seeder
         // 4. สร้างช่างที่ 'available' แน่นอนหมวดหมู่ละ 2 คน (เพื่อให้ทุกบริการมีผู้ให้บริการอย่างน้อย 2 คน)
         foreach ($categories as $category) {
             Provider::factory(2)->create([
-                'status' => 'available',
+                'status' => ProviderStatus::Available,
             ])->each(function (Provider $provider) use ($category) {
                 $provider->categories()->attach($category->id);
             });

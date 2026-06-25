@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BookingStatus;
+use App\Enums\ProviderStatus;
 use App\Http\Requests\CreateBookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
@@ -28,7 +29,7 @@ class BookingController extends Controller
         $service = Service::findOrFail($request->service_id);
         $provider = Provider::findOrFail($request->provider_id);
 
-        if ($provider->status !== 'available') {
+        if ($provider->status !== ProviderStatus::Available) {
             return response()->json([
                 'message' => 'Provider is busy',
             ], 422);

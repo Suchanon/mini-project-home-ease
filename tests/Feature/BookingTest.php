@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\BookingStatus;
+use App\Enums\ProviderStatus;
 use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Provider;
@@ -33,7 +34,7 @@ test('authenticated user can create a booking successfully', function () {
     ]);
 
     $provider = Provider::factory()->create([
-        'status' => 'available',
+        'status' => ProviderStatus::Available,
     ]);
     $provider->categories()->attach($category->id);
 
@@ -136,7 +137,7 @@ test('cannot book a provider if they do not have the skill in the category', fun
     ]);
 
     $provider = Provider::factory()->create([
-        'status' => 'available',
+        'status' => ProviderStatus::Available,
     ]);
     // Do not attach category to provider
 
@@ -166,7 +167,7 @@ test('user can view their own bookings list ordered by latest', function () {
         'description' => 'Fix leak',
         'base_price' => 500.00,
     ]);
-    $provider = Provider::factory()->create(['status' => 'available']);
+    $provider = Provider::factory()->create(['status' => ProviderStatus::Available]);
     $provider->categories()->attach($category->id);
 
     // Create two bookings with different timestamps
@@ -216,7 +217,7 @@ test('user can view their own booking detail', function () {
         'description' => 'Fix leak',
         'base_price' => 500.00,
     ]);
-    $provider = Provider::factory()->create(['status' => 'available']);
+    $provider = Provider::factory()->create(['status' => ProviderStatus::Available]);
 
     $booking = Booking::create([
         'user_id' => $user->id,
@@ -251,7 +252,7 @@ test('user cannot view another users booking', function () {
         'description' => 'Fix leak',
         'base_price' => 500.00,
     ]);
-    $provider = Provider::factory()->create(['status' => 'available']);
+    $provider = Provider::factory()->create(['status' => ProviderStatus::Available]);
 
     $booking = Booking::create([
         'user_id' => $userB->id, // belongs to B
@@ -281,7 +282,7 @@ test('user can cancel their own booking when status is pending or accepted', fun
         'name' => 'Leak Repair',
         'base_price' => 500.00,
     ]);
-    $provider = Provider::factory()->create(['status' => 'available']);
+    $provider = Provider::factory()->create(['status' => ProviderStatus::Available]);
 
     $bookingPending = Booking::create([
         'user_id' => $user->id,
@@ -339,7 +340,7 @@ test('user cannot cancel booking when not pending or accepted', function () {
         'name' => 'Leak Repair',
         'base_price' => 500.00,
     ]);
-    $provider = Provider::factory()->create(['status' => 'available']);
+    $provider = Provider::factory()->create(['status' => ProviderStatus::Available]);
 
     $bookingCancelled = Booking::create([
         'user_id' => $user->id,
@@ -370,7 +371,7 @@ test('user cannot cancel another users booking', function () {
         'name' => 'Leak Repair',
         'base_price' => 500.00,
     ]);
-    $provider = Provider::factory()->create(['status' => 'available']);
+    $provider = Provider::factory()->create(['status' => ProviderStatus::Available]);
 
     $booking = Booking::create([
         'user_id' => $userB->id,
