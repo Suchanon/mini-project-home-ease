@@ -33,7 +33,7 @@ class CatalogController extends Controller
         return ServiceResource::collection($services);
     }
 
-    public function getServiceProviders($serviceId)
+    public function getServiceProviders(int $serviceId)
     {
         $service = Service::findOrFail($serviceId);
 
