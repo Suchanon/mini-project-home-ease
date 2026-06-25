@@ -33,11 +33,15 @@ php artisan make:controller AuthController
 1. **`register` (สมัครสมาชิก):**
    * รับข้อมูล `name`, `email`, `password`, `phone`
    * ทำการตรวจสอบข้อมูล (Validation) เช่น อีเมลต้องห้ามซ้ำ, รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
-   * บันทึกข้อมูลลงฐานข้อมูล (เข้ารหัสผ่านด้วย `Hash::make()` หรือใช้ Laravel Automagic ใน Model)
-   * สร้าง Token สำหรับลูกค้าใหม่ด้วย `$user->createToken('auth_token')->plainTextToken` และส่งกลับในรูปแบบ JSON
+   * บันทึกข้อมูลลงฐานข้อมูล 
+     > [!TIP]
+     > **Laravel Automagic Hashing:** ในโมเดล `User` ของ Laravel 11/13 จะมี cast `'password' => 'hashed'` อยู่แล้ว ดังนั้นเวลาสร้าง User เราสามารถส่งรหัสผ่านแบบดิบ (Raw Password) เข้าไปได้เลย ระบบจะเข้ารหัสให้เองโดยไม่ต้องสั่ง `Hash::make()` ใน Controller ซ้ำซ้อน
+   * สร้าง Token สำหรับลูกค้าใหม่ด้วย `$user->generateAuthToken()`
+     > [!TIP]
+     > **Encapsulated Token Creation:** แทนที่จะเรียกใช้ `createToken()` ตรง ๆ ใน Controller เราควรเขียนครอบไว้เป็น Method ในโมเดล `User` เช่น `generateAuthToken()` เพื่อรวบยอดการตั้งค่าสิทธิ์ (Abilities) หรือตั้งเวลาหมดอายุของ Token ไว้ในที่เดียว (ช่วยให้ตัว Controller สะอาดและทดสอบง่ายขึ้น)
 2. **`login` (เข้าสู่ระบบ):**
    * รับ `email` และ `password`
-   * ตรวจสอบว่าอีเมลมีอยู่จริงและรหัสผ่านถูกต้องด้วย `Auth::attempt()` หรือ `Hash::check()`
+   * ตรวจสอบว่าอีเมลมีอยู่จริงและรหัสผ่านถูกต้องด้วย `Auth::attempt()` (ซึ่งจะทำหน้าที่ตรวจสอบ Password Hash ให้อัตโนมัติ)
    * หากผ่าน ให้ออก Token ใหม่และส่งกลับไปยังฝั่งผู้ใช้
 3. **`logout` (ออกจากระบบ - Protected Route):**
    * ลบ Token ปัจจุบันที่กำลังใช้งานอยู่ของผู้ใช้ออกจากระบบผ่าน `$request->user()->currentAccessToken()->delete()` เพื่อให้ Token นั้นใช้ไม่ได้อีกต่อไป

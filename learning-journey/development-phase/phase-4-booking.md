@@ -59,7 +59,14 @@ php artisan make:controller BookingController
    * **Double-Check Validation (Business Logic Layer):**
      * ดึงข้อมูลผู้ใช้ออกมา `$user = $request->user()`
      * ดึงช่างที่เลือก ตรวจสอบว่าช่างมีสถานะเป็น `available` จริงหรือไม่
-     * ดึงบริการที่เลือก ตรวจสอบว่าหมวดหมู่ของบริการนั้นตรงกับทักษะช่าง (ผ่านตารางกลาง `provider_skills`) จริงหรือไม่ หากไม่ตรง ให้หยุดการจองและแจ้งข้อผิดพลาดพร้อมรหัสตอบรับที่เหมาะสม (เช่น 422 Unprocessable Entity)
+     * ดึงบริการที่เลือก ตรวจสอบว่าหมวดหมู่ของบริการนั้นตรงกับทักษะช่างจริงหรือไม่
+       > [!TIP]
+       > **Rich Model Encapsulation:** แทนที่จะรันคิวรีเช็คความสัมพันธ์ซับซ้อนใน Controller ให้ย้าย Logic นี้ไปเป็นเมธอดใน Model `Provider` เช่น `$provider->hasSkill($categoryId)` เพื่อส่งเสริมความเป็น Encapsulation และง่ายต่อการเขียน Unit Test:
+       > ```php
+       > if (! $provider->hasSkill($service->category_id)) {
+       >     return response()->json(['message' => 'provider has no skill in this category'], 422);
+       > }
+       > ```
    * **บันทึกข้อมูล:**
      * คัดลอกราคาฐานของบริการมาระบุใน `price_charged`
      * กำหนดสถานะการจองตั้งต้นเป็น `pending`
@@ -67,10 +74,12 @@ php artisan make:controller BookingController
 2. **`index(Request $request)` (ดูประวัติการจองของตนเอง - Protected):**
    * ดึงรายการจองเฉพาะที่เป็นของตนเองเท่านั้น `$user->bookings()->with(['service', 'provider'])->get()`
 3. **`show(Booking $booking)` (ดูรายละเอียดเฉพาะเจาะจง - Protected):**
-   * บังคับใช้สิทธิ์การตรวจสอบด้วย Policy: `$this->authorize('view', $booking)`
+   * บังคับใช้สิทธิ์การตรวจสอบด้วย Policy:
+     > [!IMPORTANT]
+     > **Policy Verification in Laravel 11/13:** ใน Laravel รุ่นใหม่ แนะนำให้ใช้ Facade `Gate::authorize('view', $booking)` ในการตรวจสอบสิทธิ์แทน `$this->authorize()` ที่เคยใช้ในเวอร์ชันก่อน ๆ
    * ส่งคืนข้อมูลโดยฟอร์แมตผ่าน `BookingResource`
 4. **`cancel(Booking $booking)` (ยกเลิกการจอง - Protected):**
-   * บังคับใช้สิทธิ์การตรวจสอบด้วย Policy: `$this->authorize('cancel', $booking)`
+   * บังคับใช้สิทธิ์การตรวจสอบด้วย Policy: `Gate::authorize('cancel', $booking)`
    * ปรับสถานะการจองเป็น `cancelled` และบันทึกข้อมูลลงฐานข้อมูล
 
 ---

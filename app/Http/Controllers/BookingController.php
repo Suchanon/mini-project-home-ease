@@ -34,10 +34,7 @@ class BookingController extends Controller
                 'message' => 'Provider is busy',
             ], 422);
         }
-        $hasSkill = $provider->categories()
-            ->where('categories.id', $service->category_id)
-            ->exists();
-        if (! $hasSkill) {
+        if (! $provider->hasSkill($service->category_id)) {
             return response()->json(['message' => 'provider has no skill in this category'], 422);
         }
 

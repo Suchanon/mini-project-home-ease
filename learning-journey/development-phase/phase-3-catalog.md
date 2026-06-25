@@ -12,6 +12,9 @@
 * **Eager Loading (`with()`) vs TypeORM Relations Loading:**
   * ใน NestJS คุณระบุ `relations: ['category']` ใน Repository
   * ใน Laravel หากคุณเรียก `$services = Service::all()` แล้วดึงหมวดหมู่ย่อยใน Loop จะเกิดปัญหา **N+1 Query** เสมอ วิธีแก้คือการทำ Eager Loading: `Service::with('category')->get()` เพื่อดึงข้อมูลทั้งหมดมารอไว้ใน Query เดียว
+  
+  > [!TIP]
+  > **Automatic N+1 Detection:** ในช่วงการพัฒนา (Development) เราสามารถเปิดใช้ `Model::preventLazyLoading(! app()->isProduction())` ใน `AppServiceProvider.php` เพื่อให้ระบบโยน Exception ออกมาทันทีที่เกิดการรัน Query แบบ Lazy Loading (N+1) ช่วยป้องกันประสิทธิภาพคอขวดตั้งแต่ช่วงเขียนโค้ด
 
 ---
 
@@ -54,9 +57,27 @@ php artisan make:controller CatalogController
    * รองรับการฟิลเตอร์ด้วย `category_id` (ถ้าส่งมา)
    * รองรับการค้นหา (Search) จากชื่อบริการด้วย Query String `?search=ล้างแอร์`
    * ทำ Eager Loading ตาราง `category` เพื่อลดจำนวน Query
+   
+     > [!TIP]
+     > **Conditional Queries (`when()`):** หลีกเลี่ยงการใช้ `if-else` หลายชั้นในการต่อสาย Query Builder ใน Laravel เรามีเมธอด `when()` ช่วยเขียนคิวรีแบบมีเงื่อนไขได้อย่างเป็นระเบียบและสวยงาม:
+     > ```php
+     > $services = Service::with('category')
+     >     ->when($request->category_id, fn ($q, $id) => $q->where('category_id', $id))
+     >     ->when($request->search, fn ($q, $search) => $q->where('name', 'like', "%{$search}%"))
+     >     ->get();
+     > ```
 3. **`getServiceProviders` (ดึงรายชื่อช่างสำหรับบริการนั้น):**
    * เส้นทาง: `/api/services/{service_id}/providers`
    * **Business Logic:** ค้นหาช่างที่สามารถทำบริการนี้ได้ โดยตรวจสอบว่าหมวดหมู่ของบริการนี้ (`category_id`) ตรงกับความสามารถของช่าง (`provider_skills`) และช่างต้องมีสถานะเป็น `available` เท่านั้น
+   
+     > [!TIP]
+     > **Simplifying Relationship Checks (`whereRelation()`):**
+     > แทนที่จะเขียน `whereHas` ยาว ๆ สำหรับเช็คเงื่อนไขที่ซับซ้อน หากเงื่อนไขความสัมพันธ์เป็นการเปรียบเทียบคอลัมน์แบบง่าย คุณสามารถใช้ `whereRelation` เพื่อย่นระยะโค้ดได้ เช่น:
+     > ```php
+     > $providers = Provider::where('status', 'available')
+     >     ->whereRelation('categories', 'categories.id', $service->category_id)
+     >     ->get();
+     > ```
 
 ---
 

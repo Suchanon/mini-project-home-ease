@@ -39,9 +39,7 @@ class CatalogController extends Controller
         $service = Service::findOrFail($serviceId);
 
         $providers = Provider::where('status', ProviderStatus::Available)
-            ->whereHas('categories', function ($query) use ($service) {
-                $query->where('categories.id', $service->category_id);
-            })
+            ->whereRelation('categories', 'categories.id', $service->category_id)
             ->get();
 
         return ProviderResource::collection($providers);

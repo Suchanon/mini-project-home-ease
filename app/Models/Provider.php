@@ -35,6 +35,14 @@ class Provider extends Model
     }
 
     /**
+     * Check if the provider has a skill in the given category.
+     */
+    public function hasSkill(int $categoryId): bool
+    {
+        return $this->categories()->where('categories.id', $categoryId)->exists();
+    }
+
+    /**
      * @return HasMany<Booking, $this>
      */
     public function bookings(): HasMany

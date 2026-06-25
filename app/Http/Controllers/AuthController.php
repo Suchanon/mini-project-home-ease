@@ -21,7 +21,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => $validated['password'],
             'phone' => $validated['phone'] ?? null,
         ]);
 
@@ -48,8 +48,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        /** @var User $user */
-        $user = User::where('email', $validated['email'])->firstOrFail();
+        $user = Auth::user();
         $token = $user->generateAuthToken();
 
         return response()->json([

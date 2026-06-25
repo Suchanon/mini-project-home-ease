@@ -81,13 +81,14 @@
 *   รันคำสั่ง `php artisan install:api` เพื่อเปิดใช้งาน API Routing และติดตั้ง Laravel Sanctum โดยอัตโนมัติ
 *   แก้ไขโมเดล `User` เพื่อใช้เทรต `Laravel\Sanctum\HasApiTokens` ซึ่งช่วยให้ Model สามารถเรียกฟังก์ชันออกโทเค็นได้
 *   สร้าง `AuthController` พร้อมเมธอดการทำงาน 3 เมธอดหลัก:
-    *   `register()`: สมัครสมาชิก, เข้ารหัสผ่าน และคืน Bearer Token ระดับ HTTP 201 Created
+    *   `register()`: สมัครสมาชิกและคืน Bearer Token ระดับ HTTP 201 Created (ส่งผ่านรหัสผ่านดิบเพื่อให้ Cast ใน Model จัดการเข้ารหัสให้อัตโนมัติ ป้องกันการทำ Double Hashing)
     *   `login()`: ตรวจสอบความถูกต้องของอีเมลและรหัสผ่าน คืน Bearer Token และข้อมูลผู้ใช้
     *   `logout()`: สั่งยกเลิกโทเค็นปัจจุบันที่ผู้ใช้ถืออยู่ผ่าน `$request->user()->currentAccessToken()->delete()`
 *   ตั้งค่าแยกกลุ่ม API Routes ใน [api.php](file:///Users/alex_m3/Herd/mini-project/routes/api.php) โดยใช้ `auth:sanctum` Middleware ในการล็อกสิทธิ์ฟังก์ชัน Logout
 
 *   **การเลือกใช้ Laravel Sanctum:** ตัดสินใจเลือกใช้งานเนื่องจากเป็นตัวเบา (Lightweight Token-based Authentication) ที่จัดการโทเค็นฝั่ง API ผ่านฐานข้อมูลตาราง `personal_access_tokens` แทนการถอดถอนและลงนามคีย์ลับขนาดใหญ่แบบ JWT ในฝั่ง NestJS
 *   **การใช้ `Auth::attempt()` ในการยืนยันข้อมูลล็อกอิน:** เลือกใช้เพื่อความสะดวกและปลอดภัย เนื่องจากระบบจะทำการดึงข้อมูลผู้ใช้จากคีย์ระบุอีเมล ค้นหา และทำ Hash Verify ด้วย Bcrypt ในตัวโดยไม่ต้องดึงผู้ใช้มาเช็คเองแมนนวล
+*   **การงดเว้น `Hash::make()` ใน Controller:** เลือกที่จะส่งรหัสผ่านธรรมดาตรงเข้าโมเดลเพื่อใช้ประโยชน์จากฟังก์ชัน Cast `'password' => 'hashed'` ของ Eloquent โดยตรง ซึ่งสอดคล้องกับแนวปฏิบัติที่ดีในการป้องกันปัญหา Double Hashing (แฮชซ้ำสองชั้น) และทำให้ Controller ทำงานเรียบง่ายที่สุด (Skinny Controller)
 
 ---
 
@@ -111,13 +112,13 @@
 *   สร้าง [CatalogController](file:///Users/alex_m3/Herd/mini-project/app/Http/Controllers/CatalogController.php) พร้อมเมธอด:
     *   `getCategories()`: ดึงหมวดหมู่พร้อมนับจำนวนบริการภายในด้วย `withCount('services')`
     *   `getServices()`: ค้นหาบริการย่อย รองรับการกรองด้วย `category_id` และคีย์เวิร์ด `search` ผ่านคำสั่ง `$query->when(...)` พร้อมทำ Eager Loading ตาราง `category`
-    *   `getServiceProviders($serviceId)`: ดึงรายชื่อช่างที่เป็น `available` และตรงกับหมวดหมู่ของบริการนั้น ๆ ผ่านคำสั่ง `whereHas('categories')`
+    *   `getServiceProviders($serviceId)`: ดึงรายชื่อช่างที่เป็น `available` และตรงกับหมวดหมู่ของบริการนั้น ๆ ผ่านคำสั่งย่อ `whereRelation('categories', 'categories.id', $service->category_id)`
 *   ผูกเส้นทางคิวรีเหล่านี้เป็นเส้นทางสาธารณะ (Public) ใน [routes/api.php](file:///Users/alex_m3/Herd/mini-project/routes/api.php)
 
 #### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
 *   **การแก้ปัญหา N+1 คิวรีด้วย Eager Loading และ Relationship Constraints:**
     *   การทำ `Service::with('category')->get()` ช่วยรวบยอดคำสั่ง SQL ดึงหมวดหมู่ย่อยทั้งหมดมารอไว้ในคราวเดียว แทนการวนลูป Query ทีละแถว
-    *   การตรวจสอบช่างผู้ให้บริการด้วย `whereHas('categories')` ช่วยให้ฐานข้อมูลตรวจสอบความสัมพันธ์ระดับ N:M (Many-to-Many) ค้นหาช่างที่มีทักษะตรงกลุ่มได้ทันทีในคิวรีเดียวโดยไม่ต้องดึงช่างทั้งหมดมาวนลูปเช็คใน PHP
+    *   การใช้ `whereRelation('categories', 'categories.id', ...)` ซึ่งเป็นตัวย่อที่มีประสิทธิภาพสูงของ `whereHas()` ช่วยให้ฐานข้อมูลสแกนหาช่างที่มีทักษะในหมวดหมู่ที่เหมาะสมใน Query เดียว และลดความรกรุงรังของโค้ดโดยไม่ต้องเขียน Closure ฟังก์ชัน
 *   **การแก้ไขปัญหาข้อมูลทดสอบสุ่มไม่พบ (Randomized Seed Data):**
     *   พบปัญหาคิวรี `GET /api/services/1/providers` คืนค่าเป็น `[]` เนื่องจากระบบสุ่มของ Seeder กำหนดช่างตรงหมวดหมู่ Plumbing (Category 1) ไว้มีสถานะเป็น `on_leave` ทั้งหมด
     *   แก้ไขเพื่อการทดสอบโดยเขียนคำสั่ง Tinker บังคับให้ช่าง ID 8 มีสถานะเป็น `available` เพื่อยืนยันว่าโค้ดฟังก์ชันค้นหาช่างทำงานได้อย่างสมบูรณ์
@@ -145,16 +146,17 @@
     *   `cancel`: ยกเลิกได้เฉพาะใบจองของตัวเอง และต้องอยู่ภายใต้สถานะ `pending` หรือ `accepted` เท่านั้น
 *   สร้าง [BookingController.php](file:///Users/alex_m3/Herd/mini-project/app/Http/Controllers/BookingController.php) สำหรับบริหารจัดการ Logic ธุรกรรมการจอง:
     *   ตรวจสอบช่างต้องไม่ติดงาน (`status === 'available'`)
-    *   ตรวจสอบประเภทช่างว่ามีทักษะสอดคล้องกับหมวดหมู่บริการจริงหรือไม่ ผ่านคำสั่ง `exists()` บน Pivot Table `provider_skills`
+    *   ตรวจสอบประเภทช่างว่ามีทักษะสอดคล้องกับหมวดหมู่บริการจริงหรือไม่ ผ่านการเรียกเมธอด `$provider->hasSkill($categoryId)` ใน Model `Provider`
     *   บันทึกข้อมูลแบบ **Price Snapshot (`price_charged`)** ป้องกันปัญหาการแก้ไขราคาในอนาคตกระทบยอดเดิม
 *   ตั้งค่า Endpoint ใน [api.php](file:///Users/alex_m3/Herd/mini-project/routes/api.php) ภายใต้กลุ่ม Protected API ด้วย Middleware `auth:sanctum`
 *   เขียนชุดทดสอบ [BookingTest.php](file:///Users/alex_m3/Herd/mini-project/tests/Feature/BookingTest.php) ทดสอบครอบคลุมเงื่อนไขความถูกต้อง ทั้งกรณีผ่าน (Happy Path) และปฏิเสธ (Validation/Policy Failures)
 
 #### 2. การตัดสินใจเชิงเทคนิค (Technical Decisions)
 *   **การใช้ Facade `Gate::authorize()` แทน `$this->authorize()`:** เนื่องจากโครงสร้าง Controller เริ่มต้นใน Laravel 13 มีลักษณะเรียบง่าย (Lightweight) โดยไม่มีการสั่ง `use AuthorizesRequests;` การเลือกใช้สแตติกเมธอด `Gate::authorize(...)` โดยตรง ช่วยให้โค้ดสะอาดและสอดคล้องกับสถาปัตยกรรมรุ่นใหม่
-*   **การจัดแบ่งหน้าที่ในการ Validation:**
+*   **การจัดแบ่งหน้าที่ในการ Validation และ Rich Domain Model Encapsulation:**
     *   *Form Request:* ตรวจสอบประเภทข้อมูล รูปแบบวันที่ และความมีอยู่จริงของ ID ในฐานข้อมูล (Structural Validation)
-    *   *Controller:* ตรวจสอบกฎเชิงธุรกิจที่มีความซับซ้อน เช่น ความพร้อมของช่าง และการตรวจสอบสกิลช่างกับหมวดหมู่บริการ (Business-State Validation) เพื่อให้ส่งข้อความ Response ที่อ่านเข้าใจง่ายพร้อมรหัส `422`
+    *   *Model (Rich Model):* ย้าย Logic การตรวจสอบความสอดคล้องของหมวดหมู่และสกิลช่างเข้าไปอยู่ในคลาส `Provider` ในรูปแบบของ Helper Method `$provider->hasSkill($categoryId)` เพื่อส่งเสริม Encapsulation และการทำ Unit Testing
+    *   *Controller:* ควบคุมลำดับขั้นตอนทางธุรกิจ (Orchestration) และเช็คสถานะการเข้ากันได้ผ่าน Helper Method เพื่อส่งคืนข้อมูลหรือตอบกลับ Error `422` ด้วยรหัสและข้อความที่เหมาะสม
 *   **การป้องกันช่องโหว่ความปลอดภัยระดับข้อมูล (Mass Assignment & Overposting Protection):**
     *   *การแก้ไขช่องโหว่ `user_id` ที่มีสิทธิ์ส่งมาผ่าน Mass Assignment:* ป้องกันโดยการสร้างผ่านโมเดลความสัมพันธ์ของ User ที่ตรวจสอบสิทธิ์ผ่านระบบ Token แล้วเท่านั้น (`$request->user()->bookings()->create(...)`) ทำให้ค่า `user_id` ถูกเขียนทับด้วยระบบหลังบ้านเสมอ และละทิ้งข้อมูลผู้ใช้ภายนอกที่ส่งเข้ามา
     *   *การจัดการ `service_id` และ `provider_id`:* ตรวจสอบด้วยการทำ 2-Layer Check ตั้งแต่การยืนยันการมีอยู่ของแถวในฐานข้อมูลใน Form Request และการรันคิวรีตรวจสอบความเข้ากันได้ของ Skill และสถานะของช่างใน Controller
