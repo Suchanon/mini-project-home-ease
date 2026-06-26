@@ -68,4 +68,24 @@ class BookingController extends Controller
 
         return new BookingResource($booking);
     }
+
+    public function advance(Booking $booking)
+    {
+        $nextStatus = match ($booking->status) {
+            BookingStatus::Pending => BookingStatus::Accepted,
+            BookingStatus::Accepted => BookingStatus::InProgress,
+            BookingStatus::InProgress => BookingStatus::Completed,
+            default => null,
+        };
+
+        if ($nextStatus) {
+            $booking->update([
+                'status' => $nextStatus->value,
+            ]);
+        }
+
+        $booking->load(['service', 'provider']);
+
+        return new BookingResource($booking);
+    }
 }
