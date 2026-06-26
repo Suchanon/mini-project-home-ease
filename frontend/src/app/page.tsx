@@ -190,10 +190,6 @@ export default async function CatalogPage({ searchParams }: PageProps) {
                         <span className="inline-flex items-center gap-1 rounded-lg bg-cyan-500/10 px-2.5 py-1 text-xs font-semibold text-cyan-400 border border-cyan-500/15">
                           {svc.category?.name || 'Service'}
                         </span>
-                        <div className="flex items-center gap-1 text-xs text-slate-400">
-                          <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />
-                          <span>Ready to Book</span>
-                        </div>
                       </div>
 
                       <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors duration-200">
