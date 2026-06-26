@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { cookies } from 'next/headers';
-import { logoutAction } from '@/lib/actions/auth';
-import { CalendarRange, LogIn, LogOut, Sparkles, UserPlus } from 'lucide-react';
+import LogoutButton from './LogoutButton';
+import { CalendarRange, LogIn, Sparkles, UserPlus } from 'lucide-react';
 
 export async function Navbar() {
   const cookieStore = await cookies();
@@ -39,15 +39,7 @@ export async function Navbar() {
                   <CalendarRange className="h-4 w-4" />
                   <span>My Bookings</span>
                 </Link>
-                <form action={logoutAction} className="inline">
-                  <button
-                    type="submit"
-                    className="flex items-center gap-2 rounded-xl bg-red-500/10 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-500/20 hover:text-red-300 border border-red-500/20 hover:border-red-500/30 transition-all duration-200"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span>Logout</span>
-                  </button>
-                </form>
+                <LogoutButton />
               </>
             ) : (
               <div className="flex items-center gap-2">

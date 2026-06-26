@@ -37,7 +37,11 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${montserrat.variable} ${cormorant.variable} h-full antialiased dark`}
+      suppressHydrationWarning
     >
+      <head>
+        <meta name="darkreader-lock" />
+      </head>
       <body className="min-h-full flex flex-col bg-[#0C0A09] text-slate-100 font-sans selection:bg-orange-500/30 selection:text-orange-200 overflow-x-hidden">
         <Navbar />
         <main className="flex-1 flex flex-col">

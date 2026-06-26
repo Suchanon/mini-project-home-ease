@@ -18,6 +18,84 @@ export default function LoginForm() {
     }
   }, [state, redirect]);
 
+  const isRedirecting = !!state?.success;
+  const isCreateBooking = redirect.includes('/bookings/create');
+
+  if (isRedirecting) {
+    if (isCreateBooking) {
+      return (
+        <div className="relative min-h-[80vh] bg-[#0C0A09] py-12 w-full animate-pulse">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8 space-y-3">
+              <div className="h-6 w-32 bg-white/5 rounded-full mx-auto skeleton-shimmer" />
+              <div className="h-9 w-64 bg-white/5 rounded-2xl mx-auto skeleton-shimmer" />
+              <div className="h-4 w-96 bg-white/5 rounded-full mx-auto skeleton-shimmer" />
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-[#14110F]/40 p-6 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="space-y-2">
+                <div className="h-3 w-28 bg-white/5 rounded-full skeleton-shimmer" />
+                <div className="h-6 w-48 bg-white/5 rounded-xl skeleton-shimmer" />
+                <div className="h-4 w-72 bg-white/5 rounded-full skeleton-shimmer" />
+              </div>
+              <div className="space-y-1 sm:text-right shrink-0">
+                <div className="h-3 w-16 bg-white/5 rounded-full sm:ml-auto skeleton-shimmer" />
+                <div className="h-7 w-24 bg-white/5 rounded-xl skeleton-shimmer" />
+              </div>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-[#14110F]/25 p-6 sm:p-8 space-y-6">
+              <div className="space-y-2">
+                <div className="h-5 w-48 bg-white/5 rounded-xl skeleton-shimmer" />
+                <div className="h-4.5 w-72 bg-white/5 rounded-full skeleton-shimmer" />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {[1, 2].map((i) => (
+                  <div key={i} className="p-5 rounded-2xl border border-white/10 bg-white/5 space-y-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex gap-3 w-full">
+                        <div className="h-10 w-10 rounded-xl bg-white/5 shrink-0 skeleton-shimmer" />
+                        <div className="space-y-1.5 w-full">
+                          <div className="h-5 bg-white/5 rounded-xl w-24 skeleton-shimmer" />
+                          <div className="h-3.5 bg-white/5 rounded-full w-28 skeleton-shimmer" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative min-h-[80vh] bg-[#0C0A09] py-12 w-full animate-pulse">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-white/10 pb-6 mb-8">
+            <div className="space-y-3">
+              <div className="h-6 w-32 bg-white/5 rounded-full skeleton-shimmer" />
+              <div className="h-9 w-64 bg-white/5 rounded-2xl skeleton-shimmer" />
+              <div className="h-4 w-80 bg-white/5 rounded-full skeleton-shimmer" />
+            </div>
+            <div className="h-12 w-40 bg-white/5 rounded-xl shrink-0 skeleton-shimmer" />
+          </div>
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 rounded-2xl border border-white/10 bg-[#14110F]/40">
+                <div className="flex flex-col sm:flex-row items-start gap-4 w-full">
+                  <div className="hidden sm:block h-12 w-12 shrink-0 rounded-xl bg-white/5 skeleton-shimmer" />
+                  <div className="space-y-3 w-full sm:w-auto">
+                    <div className="h-6 w-48 bg-white/5 rounded-xl skeleton-shimmer" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8 rounded-3xl border border-white/10 bg-[#151210]/50 p-8 shadow-2xl backdrop-blur-xl">
