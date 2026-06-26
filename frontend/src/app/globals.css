@@ -9,15 +9,10 @@
   --color-secondary: #F59E0B;
   --color-cta: #EA580C;
   --color-cta-hover: #C2410C;
-}
 
-@theme inline {
+  /* Theme aliases */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-montserrat);
-  --font-serif: var(--font-cormorant);
-  
-  /* Custom brand utilities */
   --color-brand-primary: var(--color-primary);
   --color-brand-secondary: var(--color-secondary);
   --color-brand-cta: var(--color-cta);
