@@ -12,11 +12,11 @@ export async function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform duration-200">
-                <Sparkles className="h-5 w-5" />
+            <Link href="/" className="flex items-center gap-2 group cursor-pointer">
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/20 transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.5),0_0_40px_rgba(249,115,22,0.2)] group-hover:scale-105">
+                <Sparkles className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+              <span className="text-xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight transition-all duration-300 group-hover:from-orange-200 group-hover:via-white group-hover:to-orange-300 group-hover:drop-shadow-[0_0_8px_rgba(249,115,22,0.3)]">
                 HomeEase
               </span>
             </Link>
