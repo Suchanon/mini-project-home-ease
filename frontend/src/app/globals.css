@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #080B11;
-  --foreground: #F1F5F9;
+  --background: #0C0A09;
+  --foreground: #FFF7ED;
   
-  /* Brand colors matching Trust & Authority design system */
-  --color-primary: #1E40AF;
-  --color-secondary: #3B82F6;
-  --color-cta: #F97316;
-  --color-cta-hover: #EA580C;
+  /* Brand colors matching Trust & Authority design system in Orange theme */
+  --color-primary: #F97316;
+  --color-secondary: #F59E0B;
+  --color-cta: #EA580C;
+  --color-cta-hover: #C2410C;
 }
 
 @theme inline {
@@ -40,16 +40,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0F1D;
+  background: #0F0D0C;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
+  background: #2E2520;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #4A3B33;
 }
 
 /* Stepper animation styles */
@@ -60,4 +60,19 @@ body {
 
 .animate-pulse-slow {
   animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Snappy Button Active Click States */
+button,
+a[href].rounded-xl,
+a[href].rounded-2xl,
+.btn-snappy {
+  transition: transform 100ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+button:active:not(:disabled),
+a[href].rounded-xl:active,
+a[href].rounded-2xl:active,
+.btn-snappy:active:not(:disabled) {
+  transform: scale(0.97);
 }

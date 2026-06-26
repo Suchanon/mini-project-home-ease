@@ -46,7 +46,7 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
             </Link>
             <Link
               href="/"
-              className="rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/10 hover:shadow-cyan-400/25 transition-all"
+              className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-400 hover:to-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/10 hover:shadow-orange-400/25 transition-all"
             >
               Go to Home
             </Link>
@@ -57,14 +57,14 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
   }
 
   return (
-    <div className="relative min-h-screen bg-[#080B11] py-12">
+    <div className="relative min-h-screen bg-[#0C0A09] py-12">
       {/* Background radial glow */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-cyan-500/5 blur-[100px] pointer-events-none" />
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-orange-500/5 blur-[100px] pointer-events-none" />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-semibold uppercase tracking-wider mb-3">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 text-xs font-semibold uppercase tracking-wider mb-3">
             <Sparkles className="h-3 w-3" />
             <span>Real-time Status Tracker</span>
           </span>

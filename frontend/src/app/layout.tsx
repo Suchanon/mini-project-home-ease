@@ -38,7 +38,7 @@ export default function RootLayout({
       lang="en"
       className={`${montserrat.variable} ${cormorant.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-[#080B11] text-slate-100 font-sans selection:bg-cyan-500/30 selection:text-cyan-200 overflow-x-hidden">
+      <body className="min-h-full flex flex-col bg-[#0C0A09] text-slate-100 font-sans selection:bg-orange-500/30 selection:text-orange-200 overflow-x-hidden">
         <Navbar />
         <main className="flex-1 flex flex-col">
           {children}

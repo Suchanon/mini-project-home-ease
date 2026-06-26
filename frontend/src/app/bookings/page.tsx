@@ -81,15 +81,15 @@ export default async function BookingsHistoryPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#080B11] py-12">
+    <div className="relative min-h-screen bg-[#0C0A09] py-12">
       {/* Background radial glow */}
-      <div className="absolute top-10 left-1/3 h-[500px] w-[500px] rounded-full bg-blue-600/5 blur-[100px] pointer-events-none" />
+      <div className="absolute top-10 left-1/3 h-[500px] w-[500px] rounded-full bg-amber-600/5 blur-[100px] pointer-events-none" />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-white/10 pb-6 mb-8">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-semibold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 text-xs font-semibold uppercase tracking-wider mb-3">
               <Sparkles className="h-3 w-3" />
               <span>Customer Portal</span>
             </div>
@@ -102,7 +102,7 @@ export default async function BookingsHistoryPage() {
           </div>
           <Link
             href="/"
-            className="rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-cyan-500/10 hover:shadow-cyan-400/25 transition-all duration-200 shrink-0 text-center"
+            className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-400 hover:to-amber-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/10 hover:shadow-orange-400/25 transition-all duration-200 shrink-0 text-center"
           >
             Book New Service
           </Link>
@@ -115,7 +115,7 @@ export default async function BookingsHistoryPage() {
             {errorMsg.includes('login') && (
               <Link
                 href="/login"
-                className="mt-4 inline-flex rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-cyan-500/10"
+                className="mt-4 inline-flex rounded-xl bg-orange-500 hover:bg-orange-400 px-6 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-orange-500/10"
               >
                 Go to Login
               </Link>
@@ -135,7 +135,7 @@ export default async function BookingsHistoryPage() {
                 <p className="mt-2 text-slate-400">Book a professional plumber, electrician, or AC technician to get started.</p>
                 <Link
                   href="/"
-                  className="mt-6 inline-flex rounded-xl bg-cyan-500 hover:bg-cyan-400 px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-cyan-500/10"
+                  className="mt-6 inline-flex rounded-xl bg-orange-500 hover:bg-orange-400 px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-orange-500/10"
                 >
                   Browse Services
                 </Link>
@@ -148,7 +148,7 @@ export default async function BookingsHistoryPage() {
                     <Link
                       key={booking.id}
                       href={`/bookings/${booking.id}`}
-                      className="group flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 rounded-2xl border border-white/10 bg-[#0B0F19]/40 hover:bg-[#0B0F19]/70 hover:border-cyan-500/20 hover:shadow-lg hover:shadow-cyan-500/5 transition-all duration-300"
+                      className="group flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 rounded-2xl border border-white/10 bg-[#14110F]/40 hover:bg-[#14110F]/70 hover:border-orange-500/20 hover:shadow-lg hover:shadow-orange-500/5 transition-all duration-300"
                     >
                       <div className="flex flex-col sm:flex-row items-start gap-4">
                         {/* Status Icon Indicator */}
@@ -167,7 +167,7 @@ export default async function BookingsHistoryPage() {
                             </span>
                           </div>
 
-                          <h3 className="text-lg font-extrabold text-white mt-1.5 group-hover:text-cyan-400 transition-colors">
+                          <h3 className="text-lg font-extrabold text-white mt-1.5 group-hover:text-orange-400 transition-colors">
                             {booking.service?.name || 'Home Service'}
                           </h3>
                           
@@ -193,7 +193,7 @@ export default async function BookingsHistoryPage() {
                             ฿{Number(booking.price_charged).toLocaleString()}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1 text-cyan-400 group-hover:translate-x-1.5 transition-transform text-sm font-semibold">
+                        <div className="flex items-center gap-1 text-orange-400 group-hover:translate-x-1.5 transition-transform text-sm font-semibold">
                           <span>View Details</span>
                           <ChevronRight className="h-4 w-4" />
                         </div>

@@ -17,27 +17,29 @@ export default async function CatalogPage({ searchParams }: PageProps) {
   let services: Service[] = [];
   let errorMsg = '';
 
+  let servicesPath = '/api/services';
+  const queryParts: string[] = [];
+  if (search) {
+    queryParts.push(`search=${encodeURIComponent(search)}`);
+  }
+  if (categoryId) {
+    queryParts.push(`category_id=${categoryId}`);
+  }
+  if (queryParts.length > 0) {
+    servicesPath += `?${queryParts.join('&')}`;
+  }
+
   try {
-    const catsRes = await fetchAPI<{ data: Category[] }>('/api/categories', {
-      next: { revalidate: 10 },
-    });
+    const [catsRes, servicesRes] = await Promise.all([
+      fetchAPI<{ data: Category[] }>('/api/categories', {
+        next: { revalidate: 10 },
+      }),
+      fetchAPI<{ data: Service[] }>(servicesPath, {
+        cache: 'no-store',
+      })
+    ]);
+
     categories = catsRes.data;
-
-    let servicesPath = '/api/services';
-    const queryParts: string[] = [];
-    if (search) {
-      queryParts.push(`search=${encodeURIComponent(search)}`);
-    }
-    if (categoryId) {
-      queryParts.push(`category_id=${categoryId}`);
-    }
-    if (queryParts.length > 0) {
-      servicesPath += `?${queryParts.join('&')}`;
-    }
-
-    const servicesRes = await fetchAPI<{ data: Service[] }>(servicesPath, {
-      cache: 'no-store',
-    });
     services = servicesRes.data;
   } catch (error) {
     console.error('Fetch catalog error:', error);
@@ -59,20 +61,20 @@ export default async function CatalogPage({ searchParams }: PageProps) {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#080B11]">
+    <div className="relative min-h-screen bg-[#0C0A09]">
       {/* Decorative blurred background shapes */}
-      <div className="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-cyan-500/10 blur-[120px] pointer-events-none" />
-      <div className="absolute top-[20%] right-[-10%] h-[600px] w-[600px] rounded-full bg-blue-600/10 blur-[130px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-orange-500/10 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[20%] right-[-10%] h-[600px] w-[600px] rounded-full bg-amber-600/10 blur-[130px] pointer-events-none" />
 
       {/* Hero Section */}
       <section className="relative mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 lg:px-8 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-semibold uppercase tracking-wider mb-6 animate-pulse-slow">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 text-xs font-semibold uppercase tracking-wider mb-6 animate-pulse-slow">
           <Sparkles className="h-3 w-3" />
           <span>Home Service Platform</span>
         </div>
         <h1 className="font-serif text-4xl font-extrabold sm:text-6xl tracking-tight bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent leading-tight">
           Book Reliable Home Services <br className="sm:hidden" />
-          <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent italic">in Seconds</span>
+          <span className="bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent italic">in Seconds</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
           Find top-rated plumbers, electricians, AC technicians, and home maintenance pros with upfront pricing and real-time status tracking.
@@ -90,11 +92,11 @@ export default async function CatalogPage({ searchParams }: PageProps) {
               name="search"
               defaultValue={search}
               placeholder="Search services (e.g., leak repair, AC washing...)"
-              className="block w-full rounded-2xl border border-white/10 bg-[#0B1220]/60 py-4 pl-12 pr-28 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 shadow-2xl transition-all duration-200"
+              className="block w-full rounded-2xl border border-white/10 bg-[#151210]/60 py-4 pl-12 pr-28 text-white placeholder-slate-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 shadow-2xl transition-all duration-200"
             />
             <button
               type="submit"
-              className="absolute right-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 px-5 py-2 text-sm font-semibold text-white transition-all duration-200"
+              className="absolute right-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-400 hover:to-amber-500 px-5 py-2 text-sm font-semibold text-white transition-all duration-200"
             >
               Search
             </button>
@@ -124,7 +126,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
             <h2 className="font-serif text-2xl font-bold text-white tracking-tight">Services & Categories</h2>
             {search && (
               <span className="text-sm text-slate-400">
-                Search results for &ldquo;<span className="text-cyan-400">{search}</span>&rdquo;
+                Search results for &ldquo;<span className="text-orange-400">{search}</span>&rdquo;
               </span>
             )}
           </div>
@@ -135,7 +137,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
               scroll={false}
               className={`flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-medium border transition-all duration-200 ${
                 !categoryId
-                  ? 'bg-gradient-to-r from-cyan-500/10 to-blue-600/10 border-cyan-500/30 text-cyan-400 shadow-lg shadow-cyan-500/5'
+                  ? 'bg-gradient-to-r from-orange-500/10 to-amber-600/10 border-orange-500/30 text-orange-400 shadow-lg shadow-orange-500/5'
                   : 'bg-white/5 border-white/5 hover:border-white/10 text-slate-400 hover:text-white'
               }`}
             >
@@ -153,7 +155,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
                   scroll={false}
                   className={`flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-medium border transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-cyan-500/10 to-blue-600/10 border-cyan-500/30 text-cyan-400 shadow-lg shadow-cyan-500/5'
+                      ? 'bg-gradient-to-r from-orange-500/10 to-amber-600/10 border-orange-500/30 text-orange-400 shadow-lg shadow-orange-500/5'
                       : 'bg-white/5 border-white/5 hover:border-white/10 text-slate-400 hover:text-white'
                   }`}
                 >
@@ -196,17 +198,17 @@ export default async function CatalogPage({ searchParams }: PageProps) {
                 {services.map((svc) => (
                   <div
                     key={svc.id}
-                    className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#0B0F19]/40 p-6 hover:bg-[#0B0F19]/70 hover:border-cyan-500/30 transition-all duration-300 shadow-xl backdrop-blur-xl"
+                    className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#14110F]/40 p-6 hover:bg-[#14110F]/70 hover:border-orange-500/30 transition-all duration-300 shadow-xl backdrop-blur-xl"
                   >
                     <div>
                       {/* Badge Category */}
                       <div className="flex items-center justify-between mb-4">
-                        <span className="inline-flex items-center gap-1 rounded-lg bg-cyan-500/10 px-2.5 py-1 text-xs font-semibold text-cyan-400 border border-cyan-500/15">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-orange-500/10 px-2.5 py-1 text-xs font-semibold text-orange-400 border border-orange-500/15">
                           {svc.category?.name || 'Service'}
                         </span>
                       </div>
 
-                      <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors duration-200">
+                      <h3 className="text-lg font-bold text-white group-hover:text-orange-400 transition-colors duration-200">
                         {svc.name}
                       </h3>
                       <p className="mt-2 text-sm text-slate-400 line-clamp-3 leading-relaxed">
@@ -218,13 +220,13 @@ export default async function CatalogPage({ searchParams }: PageProps) {
                       <div className="flex items-end justify-between">
                         <div>
                           <span className="text-xs text-slate-500 block">Starting from</span>
-                          <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                          <span className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">
                             ฿{Number(svc.base_price).toLocaleString()}
                           </span>
                         </div>
                         <Link
                           href={`/bookings/create?service_id=${svc.id}`}
-                          className="rounded-xl bg-white/5 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 px-4 py-2.5 text-sm font-semibold text-white border border-white/10 hover:border-transparent transition-all duration-200"
+                          className="rounded-xl bg-white/5 hover:bg-gradient-to-r hover:from-orange-500 hover:to-amber-600 px-4 py-2.5 text-sm font-semibold text-white border border-white/10 hover:border-transparent transition-all duration-200"
                         >
                           Book Now
                         </Link>
@@ -242,7 +244,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 border-t border-white/5 mt-16">
         <div className="grid gap-8 md:grid-cols-3">
           <div className="flex gap-4 p-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/15">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-400 border border-orange-500/15">
               <Star className="h-6 w-6" />
             </div>
             <div>
@@ -251,7 +253,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
             </div>
           </div>
           <div className="flex gap-4 p-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/15">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-400 border border-orange-500/15">
               <CheckCircle className="h-6 w-6" />
             </div>
             <div>
@@ -260,7 +262,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
             </div>
           </div>
           <div className="flex gap-4 p-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/15">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-400 border border-orange-500/15">
               <Sparkles className="h-6 w-6" />
             </div>
             <div>

@@ -20,9 +20,9 @@ export default function RegisterForm() {
 
   return (
     <div className="flex min-h-[85vh] flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 rounded-3xl border border-white/10 bg-[#0B0F19]/50 p-8 shadow-2xl backdrop-blur-xl">
+      <div className="w-full max-w-md space-y-8 rounded-3xl border border-white/10 bg-[#151210]/50 p-8 shadow-2xl backdrop-blur-xl">
         <div className="flex flex-col items-center justify-center text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/20">
             <Sparkles className="h-6 w-6" />
           </div>
           <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-white">
@@ -55,7 +55,7 @@ export default function RegisterForm() {
                   name="name"
                   type="text"
                   required
-                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-cyan-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all duration-200"
+                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-orange-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all duration-200"
                   placeholder="John Doe"
                 />
               </div>
@@ -77,7 +77,7 @@ export default function RegisterForm() {
                   name="email"
                   type="email"
                   required
-                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-cyan-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all duration-200"
+                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-orange-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all duration-200"
                   placeholder="john@example.com"
                 />
               </div>
@@ -98,7 +98,7 @@ export default function RegisterForm() {
                   id="phone"
                   name="phone"
                   type="tel"
-                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-cyan-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all duration-200"
+                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-orange-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all duration-200"
                   placeholder="+1 (555) 019-2834"
                 />
               </div>
@@ -120,7 +120,7 @@ export default function RegisterForm() {
                   name="password"
                   type="password"
                   required
-                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-cyan-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all duration-200"
+                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-orange-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all duration-200"
                   placeholder="••••••••"
                 />
               </div>
@@ -134,7 +134,7 @@ export default function RegisterForm() {
             <button
               type="submit"
               disabled={isPending}
-              className="flex w-full justify-center rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/10 hover:shadow-cyan-400/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex w-full justify-center rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-400 hover:to-amber-500 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/10 hover:shadow-orange-400/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isPending ? 'Registering...' : 'Sign Up'}
             </button>
@@ -144,7 +144,7 @@ export default function RegisterForm() {
             <span className="text-slate-400">Already have an account? </span>
             <Link
               href={redirect !== '/bookings' ? `/login?redirect=${redirect}` : '/login'}
-              className="font-medium text-cyan-400 hover:text-cyan-300 hover:underline transition-colors"
+              className="font-medium text-orange-400 hover:text-orange-300 hover:underline transition-colors"
             >
               Login here
             </Link>

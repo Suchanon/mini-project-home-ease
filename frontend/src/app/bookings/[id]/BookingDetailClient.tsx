@@ -147,19 +147,19 @@ export default function BookingDetailClient({ initialBooking }: BookingDetailCli
                 let descClass = 'text-slate-600';
                 
                 if (stepState === 'completed') {
-                  circleClass = 'border-cyan-500 bg-cyan-500/10 text-cyan-400';
+                  circleClass = 'border-orange-500 bg-orange-500/10 text-orange-400';
                   titleClass = 'text-white font-bold';
                   descClass = 'text-slate-400';
                 } else if (stepState === 'current') {
-                  circleClass = 'border-cyan-500 bg-cyan-500 text-white shadow-lg shadow-cyan-500/20 animate-pulse-slow';
-                  titleClass = 'text-cyan-400 font-black';
+                  circleClass = 'border-orange-500 bg-orange-500 text-white shadow-lg shadow-orange-500/20 animate-pulse-slow';
+                  titleClass = 'text-orange-400 font-black';
                   descClass = 'text-slate-300';
                 }
 
                 return (
                   <div key={stepItem.key} className="flex md:flex-col items-center md:text-center gap-4 md:gap-3">
                     <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border-2 transition-all duration-300 ${circleClass}`}>
-                      {stepState === 'completed' ? <CheckCircle className="h-5 w-5 text-cyan-400" /> : stepItem.icon}
+                      {stepState === 'completed' ? <CheckCircle className="h-5 w-5 text-orange-400" /> : stepItem.icon}
                     </div>
                     <div>
                       <h3 className={`text-sm tracking-tight ${titleClass}`}>{stepItem.label}</h3>
@@ -176,7 +176,7 @@ export default function BookingDetailClient({ initialBooking }: BookingDetailCli
       {/* BOOKING DETAILS & SERVICE INFO */}
       <div className="grid gap-6 md:grid-cols-3">
         {/* Main Details Panel */}
-        <div className="md:col-span-2 rounded-3xl border border-white/10 bg-[#0B0F19]/40 p-6 sm:p-8 backdrop-blur-md space-y-6">
+        <div className="md:col-span-2 rounded-3xl border border-white/10 bg-[#14110F]/40 p-6 sm:p-8 backdrop-blur-md space-y-6">
           <h2 className="text-lg font-bold text-white border-b border-white/5 pb-3">Appointment Information</h2>
           
           <div className="space-y-4">
@@ -223,23 +223,23 @@ export default function BookingDetailClient({ initialBooking }: BookingDetailCli
         {/* Sidebar Info (Service & Provider) */}
         <div className="space-y-6">
           {/* Service Panel */}
-          <div className="rounded-3xl border border-white/10 bg-[#0B0F19]/40 p-6 backdrop-blur-md">
+          <div className="rounded-3xl border border-white/10 bg-[#14110F]/40 p-6 backdrop-blur-md">
             <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Service Summary</h3>
             <h4 className="font-extrabold text-white text-md">{booking.service?.name}</h4>
             <span className="text-xs text-slate-400 block mt-1 line-clamp-2">{booking.service?.description}</span>
             <div className="mt-4 pt-4 border-t border-white/5 flex items-end justify-between">
               <span className="text-xs text-slate-500">Price Charged</span>
-              <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">
                 ฿{Number(booking.price_charged).toLocaleString()}
               </span>
             </div>
           </div>
 
           {/* Provider Panel */}
-          <div className="rounded-3xl border border-white/10 bg-[#0B0F19]/40 p-6 backdrop-blur-md">
+          <div className="rounded-3xl border border-white/10 bg-[#14110F]/40 p-6 backdrop-blur-md">
             <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Assigned Provider</h3>
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/15">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/15">
                 <User className="h-5 w-5" />
               </div>
               <div>
@@ -258,23 +258,23 @@ export default function BookingDetailClient({ initialBooking }: BookingDetailCli
       </div>
 
       {/* DEVELOPER SIMULATION MODULE CONTROL PANEL */}
-      <div className="rounded-3xl border border-dashed border-cyan-500/30 bg-[#081223]/30 p-6 sm:p-8 backdrop-blur-xl">
+      <div className="rounded-3xl border border-dashed border-orange-500/30 bg-[#171310]/30 p-6 sm:p-8 backdrop-blur-xl">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-cyan-400">
+            <div className="flex items-center gap-2 text-orange-400">
               <Sparkles className="h-5 w-5" />
               <h3 className="font-bold text-white">Developer Simulation Panel</h3>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed max-w-xl">
               Use this panel to simulate provider behaviors by advancing the booking status through the lifecycle steps: <br />
-              <span className="text-cyan-400 font-semibold">Pending Approval</span> ➡️ <span className="text-cyan-400 font-semibold">Job Accepted</span> ➡️ <span className="text-cyan-400 font-semibold">In Progress</span> ➡️ <span className="text-cyan-400 font-semibold">Completed</span>.
+              <span className="text-orange-400 font-semibold">Pending Approval</span> ➡️ <span className="text-orange-400 font-semibold">Job Accepted</span> ➡️ <span className="text-orange-400 font-semibold">In Progress</span> ➡️ <span className="text-orange-400 font-semibold">Completed</span>.
             </p>
           </div>
-
+ 
           <button
             onClick={handleAdvance}
             disabled={isPending || status === 'completed' || status === 'cancelled'}
-            className="flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3.5 text-sm font-extrabold text-[#080B11] shadow-lg shadow-cyan-500/20 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+            className="flex items-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-400 px-6 py-3.5 text-sm font-extrabold text-[#0C0A09] shadow-lg shadow-orange-500/20 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
           >
             {isPending ? (
               <span>Advancing...</span>

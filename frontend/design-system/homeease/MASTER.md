@@ -18,13 +18,13 @@
 
 | Role | Hex | CSS Variable |
 |------|-----|--------------|
-| Primary | `#1E40AF` | `--color-primary` |
-| Secondary | `#3B82F6` | `--color-secondary` |
-| CTA/Accent | `#F97316` | `--color-cta` |
-| Background | `#EFF6FF` | `--color-background` |
-| Text | `#1E3A8A` | `--color-text` |
+| Primary | `#F97316` | `--color-primary` |
+| Secondary | `#F59E0B` | `--color-secondary` |
+| CTA/Accent | `#EA580C` | `--color-cta` |
+| Background | `#0C0A09` | `--color-background` |
+| Text | `#FFF7ED` | `--color-text` |
 
-**Color Notes:** Professional blue + urgent orange
+**Color Notes:** Premium warm charcoal background + vibrant orange and amber brand elements
 
 ### Typography
 

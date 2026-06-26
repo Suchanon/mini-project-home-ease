@@ -71,7 +71,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
   return (
     <div className="space-y-6">
       {/* Service Info Summary */}
-      <div className="rounded-3xl border border-white/10 bg-[#0B0F19]/40 p-6 backdrop-blur-md">
+      <div className="rounded-3xl border border-white/10 bg-[#14110F]/40 p-6 backdrop-blur-md">
         <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Selected Service</h2>
         <div className="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -80,7 +80,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
           </div>
           <div className="text-left sm:text-right shrink-0">
             <span className="text-xs text-slate-500 block">Starting from</span>
-            <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            <span className="text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">
               ฿{Number(service.base_price).toLocaleString()}
             </span>
           </div>
@@ -91,7 +91,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
       <div className="flex items-center justify-between px-2 sm:px-6">
         <div className="flex items-center gap-3">
           <div className={`flex h-8 w-8 items-center justify-center rounded-xl font-bold text-sm transition-all duration-200 ${
-            step === 1 ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+            step === 1 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
           }`}>
             {step > 1 ? <Check className="h-4 w-4" /> : '1'}
           </div>
@@ -102,7 +102,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
         <div className="flex-1 border-t border-dashed border-white/10 mx-4" />
         <div className="flex items-center gap-3">
           <div className={`flex h-8 w-8 items-center justify-center rounded-xl font-bold text-sm transition-all duration-200 ${
-            step === 2 ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/20' : 'bg-white/5 text-slate-500 border border-white/5'
+            step === 2 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' : 'bg-white/5 text-slate-500 border border-white/5'
           }`}>
             2
           </div>
@@ -113,7 +113,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
       </div>
 
       {/* Main Form content */}
-      <div className="rounded-3xl border border-white/10 bg-[#0B0F19]/25 p-6 sm:p-8 backdrop-blur-xl shadow-2xl">
+      <div className="rounded-3xl border border-white/10 bg-[#14110F]/25 p-6 sm:p-8 backdrop-blur-xl shadow-2xl">
         {errorMsg && (
           <div className="flex items-center gap-3 rounded-2xl bg-red-500/10 p-4 text-sm text-red-400 border border-red-500/20 mb-6">
             <AlertCircle className="h-5 w-5 shrink-0" />
@@ -151,17 +151,17 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
                       onClick={() => handleSelectProvider(p)}
                       className={`group relative text-left p-5 rounded-2xl border transition-all duration-200 ${
                         isSelected
-                          ? 'border-cyan-500 bg-cyan-500/5 shadow-lg shadow-cyan-500/5'
+                          ? 'border-orange-500 bg-orange-500/5 shadow-lg shadow-orange-500/5'
                           : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-500/10 to-blue-600/10 text-cyan-400 border border-cyan-500/15">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-orange-500/10 to-amber-600/10 text-orange-400 border border-orange-500/15">
                             <User className="h-5 w-5" />
                           </div>
                           <div>
-                            <h4 className="font-bold text-white group-hover:text-cyan-400 transition-colors">
+                            <h4 className="font-bold text-white group-hover:text-orange-400 transition-colors">
                               {p.name}
                             </h4>
                             <span className="text-xs text-slate-400 block mt-0.5">Phone: {p.phone}</span>
@@ -178,7 +178,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
                           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                           Available Now
                         </span>
-                        <span className="text-xs text-cyan-400 group-hover:translate-x-1 transition-transform flex items-center gap-1 font-semibold">
+                        <span className="text-xs text-orange-400 group-hover:translate-x-1 transition-transform flex items-center gap-1 font-semibold">
                           <span>Select</span>
                           <ArrowRight className="h-3 w-3" />
                         </span>
@@ -197,7 +197,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-white">Appointment Details</h3>
-                <p className="text-sm text-slate-400 mt-1">Provider: <span className="text-cyan-400 font-semibold">{selectedProvider.name}</span></p>
+                <p className="text-sm text-slate-400 mt-1">Provider: <span className="text-orange-400 font-semibold">{selectedProvider.name}</span></p>
               </div>
               <button
                 type="button"
@@ -224,7 +224,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
                   required
                   value={datetime}
                   onChange={(e) => setDatetime(e.target.value)}
-                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all duration-200"
+                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all duration-200"
                 />
                 {validationErrors.appointment_datetime && (
                   <p className="mt-1.5 text-xs text-red-400">{validationErrors.appointment_datetime[0]}</p>
@@ -246,7 +246,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="e.g., 123/45 Sukhumvit Rd, Khlong Toei, Bangkok, 10110"
-                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all duration-200"
+                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder-slate-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all duration-200"
                 />
                 {validationErrors.address && (
                   <p className="mt-1.5 text-xs text-red-400">{validationErrors.address[0]}</p>
@@ -268,7 +268,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="e.g., The AC blower is loud and the air coming out is warm. We need someone to clean and inspect it."
-                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all duration-200"
+                  className="block w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder-slate-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all duration-200"
                 />
                 {validationErrors.description && (
                   <p className="mt-1.5 text-xs text-red-400">{validationErrors.description[0]}</p>
@@ -288,7 +288,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
               <button
                 type="submit"
                 disabled={isPending}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-cyan-500/10 hover:shadow-cyan-400/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-400 hover:to-amber-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/10 hover:shadow-orange-400/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isPending ? 'Saving Booking...' : 'Confirm Booking'}
                 <ArrowRight className="h-4 w-4" />
