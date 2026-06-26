@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { fetchAPI } from '@/lib/api';
 import { Booking } from '@/lib/types';
-import { Calendar, User, MapPin, Sparkles, ChevronRight, CheckCircle, Clock, AlertTriangle, Play, XCircle } from 'lucide-react';
+import { Calendar, User, Sparkles, ChevronRight, CheckCircle, Clock, AlertTriangle, Play, XCircle } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,9 +12,10 @@ export default async function BookingsHistoryPage() {
   try {
     const res = await fetchAPI<{ data: Booking[] }>('/api/bookings');
     bookings = res.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error('Fetch bookings error:', error);
-    if (error.status === 401) {
+    const err = error as { status?: number };
+    if (err.status === 401) {
       errorMsg = 'Please login to view your booking history.';
     } else {
       errorMsg = 'Could not retrieve booking history at this time.';
@@ -74,7 +75,7 @@ export default async function BookingsHistoryPage() {
         hour: '2-digit',
         minute: '2-digit',
       });
-    } catch (e) {
+    } catch {
       return dtStr;
     }
   };

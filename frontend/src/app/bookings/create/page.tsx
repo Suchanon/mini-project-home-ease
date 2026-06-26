@@ -3,6 +3,7 @@ import { fetchAPI } from '@/lib/api';
 import { Service, Provider } from '@/lib/types';
 import BookingFormClient from './BookingFormClient';
 import { Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
 interface CreateBookingPageProps {
   searchParams: Promise<{ service_id?: string }>;
@@ -34,8 +35,7 @@ export default async function CreateBookingPage({ searchParams }: CreateBookingP
       );
       providers = providersRes.data;
     }
-  } catch (error: any) {
-    console.error('Fetch booking creation data error:', error);
+  } catch {
     errorMsg = 'Could not retrieve booking details at this time. Please try again.';
   }
 
@@ -44,12 +44,12 @@ export default async function CreateBookingPage({ searchParams }: CreateBookingP
       <div className="mx-auto max-w-xl px-4 py-16 text-center">
         <div className="rounded-3xl border border-red-500/10 bg-red-500/5 p-8">
           <p className="text-red-400 font-medium">{errorMsg || 'Invalid service details'}</p>
-          <a
+          <Link
             href="/"
             className="mt-6 inline-flex rounded-xl bg-white/5 hover:bg-white/10 px-5 py-2.5 text-sm font-semibold text-white border border-white/10"
           >
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     );

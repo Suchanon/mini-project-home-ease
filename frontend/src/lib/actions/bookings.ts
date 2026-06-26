@@ -21,11 +21,12 @@ export async function createBookingAction(payload: BookingPayload) {
 
     revalidatePath('/bookings');
     return { success: true, booking: res.data };
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as { message?: string; errors?: Record<string, string[]> | null };
     return {
       success: false,
-      error: error.message || 'Failed to create booking.',
-      errors: error.errors || null,
+      error: err.message || 'Failed to create booking.',
+      errors: err.errors || null,
     };
   }
 }
@@ -39,10 +40,11 @@ export async function cancelBookingAction(bookingId: number) {
     revalidatePath('/bookings');
     revalidatePath(`/bookings/${bookingId}`);
     return { success: true, booking: res.data };
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as { message?: string };
     return {
       success: false,
-      error: error.message || 'Failed to cancel booking.',
+      error: err.message || 'Failed to cancel booking.',
     };
   }
 }
@@ -56,10 +58,11 @@ export async function advanceBookingAction(bookingId: number) {
     revalidatePath('/bookings');
     revalidatePath(`/bookings/${bookingId}`);
     return { success: true, booking: res.data };
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as { message?: string };
     return {
       success: false,
-      error: error.message || 'Failed to advance booking state.',
+      error: err.message || 'Failed to advance booking state.',
     };
   }
 }

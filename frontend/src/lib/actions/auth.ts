@@ -15,7 +15,7 @@ interface AuthResponse {
   token_type: string;
 }
 
-export async function loginAction(prevState: any, formData: FormData) {
+export async function loginAction(prevState: unknown, formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
@@ -40,16 +40,17 @@ export async function loginAction(prevState: any, formData: FormData) {
     });
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as { message?: string; errors?: Record<string, string[]> | null };
     return {
       success: false,
-      error: error.message || 'Login failed.',
-      errors: error.errors || null,
+      error: err.message || 'Login failed.',
+      errors: err.errors || null,
     };
   }
 }
 
-export async function registerAction(prevState: any, formData: FormData) {
+export async function registerAction(prevState: unknown, formData: FormData) {
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
   const phone = formData.get('phone') as string;
@@ -81,11 +82,12 @@ export async function registerAction(prevState: any, formData: FormData) {
     });
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as { message?: string; errors?: Record<string, string[]> | null };
     return {
       success: false,
-      error: error.message || 'Registration failed.',
-      errors: error.errors || null,
+      error: err.message || 'Registration failed.',
+      errors: err.errors || null,
     };
   }
 }

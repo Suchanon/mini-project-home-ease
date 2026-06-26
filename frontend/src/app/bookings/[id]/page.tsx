@@ -20,11 +20,12 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
   try {
     const res = await fetchAPI<{ data: Booking }>(`/api/bookings/${bookingId}`);
     booking = res.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error('Fetch booking detail error:', error);
-    if (error.status === 403) {
+    const err = error as { status?: number };
+    if (err.status === 403) {
       errorMsg = 'You do not have permission to access this booking.';
-    } else if (error.status === 404) {
+    } else if (err.status === 404) {
       errorMsg = 'The requested booking could not be found.';
     } else {
       errorMsg = 'Failed to load booking details. Please try again.';

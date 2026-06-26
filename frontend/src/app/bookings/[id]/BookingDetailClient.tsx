@@ -87,7 +87,7 @@ export default function BookingDetailClient({ initialBooking }: BookingDetailCli
         hour: '2-digit',
         minute: '2-digit',
       });
-    } catch (e) {
+    } catch {
       return dtStr;
     }
   };
@@ -139,7 +139,7 @@ export default function BookingDetailClient({ initialBooking }: BookingDetailCli
             
             {/* Stepper items */}
             <div className="grid gap-6 md:grid-cols-4 relative z-10">
-              {steps.map((stepItem, idx) => {
+              {steps.map((stepItem) => {
                 const stepState = getStepState(stepItem.key);
                 
                 let circleClass = 'border-white/10 bg-slate-900 text-slate-500';

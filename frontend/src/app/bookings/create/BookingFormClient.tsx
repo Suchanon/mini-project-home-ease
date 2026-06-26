@@ -61,7 +61,7 @@ export default function BookingFormClient({ service, providers }: BookingFormCli
           setValidationErrors(res.errors);
         }
       }
-    } catch (err: any) {
+    } catch {
       setErrorMsg('An error occurred while sending the booking request.');
     } finally {
       setIsPending(false);

@@ -39,7 +39,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
       cache: 'no-store',
     });
     services = servicesRes.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error('Fetch catalog error:', error);
     errorMsg = 'Could not retrieve services at this time. Please try again later.';
   }
@@ -70,9 +70,9 @@ export default async function CatalogPage({ searchParams }: PageProps) {
           <Sparkles className="h-3 w-3" />
           <span>Home Service Platform</span>
         </div>
-        <h1 className="text-4xl font-extrabold sm:text-6xl tracking-tight bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+        <h1 className="font-serif text-4xl font-extrabold sm:text-6xl tracking-tight bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent leading-tight">
           Book Reliable Home Services <br className="sm:hidden" />
-          <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">in Seconds</span>
+          <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent italic">in Seconds</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
           Find top-rated plumbers, electricians, AC technicians, and home maintenance pros with upfront pricing and real-time status tracking.
@@ -100,6 +100,20 @@ export default async function CatalogPage({ searchParams }: PageProps) {
             </button>
           </div>
         </form>
+
+        {/* Popular Searches Suggestions */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-xs text-slate-500">
+          <span className="font-medium">Popular searches:</span>
+          {['leak', 'wiring', 'AC cleaning', 'pipe'].map((term) => (
+            <Link
+              key={term}
+              href={categoryId ? `/?category_id=${categoryId}&search=${encodeURIComponent(term)}` : `/?search=${encodeURIComponent(term)}`}
+              className="rounded-full bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 px-3 py-1 text-slate-300 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+            >
+              {term}
+            </Link>
+          ))}
+        </div>
       </section>
 
       {/* Main Content Area */}
@@ -107,7 +121,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
         {/* Categories Tab Bar */}
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
-            <h2 className="text-xl font-bold text-white tracking-tight">Services & Categories</h2>
+            <h2 className="font-serif text-2xl font-bold text-white tracking-tight">Services & Categories</h2>
             {search && (
               <span className="text-sm text-slate-400">
                 Search results for &ldquo;<span className="text-cyan-400">{search}</span>&rdquo;
@@ -232,7 +246,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
               <Star className="h-6 w-6" />
             </div>
             <div>
-              <h4 className="text-md font-bold text-white">Top-Rated Professionals</h4>
+              <h4 className="font-serif text-lg font-bold text-white">Top-Rated Professionals</h4>
               <p className="mt-1 text-sm text-slate-400 leading-relaxed">All providers are fully vetted, skilled, and rated by customers.</p>
             </div>
           </div>
@@ -241,7 +255,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
               <CheckCircle className="h-6 w-6" />
             </div>
             <div>
-              <h4 className="text-md font-bold text-white">Upfront Transparent Pricing</h4>
+              <h4 className="font-serif text-lg font-bold text-white">Upfront Transparent Pricing</h4>
               <p className="mt-1 text-sm text-slate-400 leading-relaxed">Know the baseline pricing before booking. No hidden fees or surprises.</p>
             </div>
           </div>
@@ -250,7 +264,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
               <Sparkles className="h-6 w-6" />
             </div>
             <div>
-              <h4 className="text-md font-bold text-white">Real-Time Tracking</h4>
+              <h4 className="font-serif text-lg font-bold text-white">Real-Time Tracking</h4>
               <p className="mt-1 text-sm text-slate-400 leading-relaxed">Track the booking lifecycle and simulate job status transitions dynamically.</p>
             </div>
           </div>
