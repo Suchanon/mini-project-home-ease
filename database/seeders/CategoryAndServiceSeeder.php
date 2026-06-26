@@ -14,20 +14,20 @@ class CategoryAndServiceSeeder extends Seeder
         $plumbing = Category::create([
             'name' => 'Plumbing',
             'slug' => 'plumbing',
-            'description' => 'บริการซ่อมแซมท่อน้ำ ก๊อกน้ำ และระบบประปาภายในบ้าน',
+            'description' => 'Repair leaking pipes, faucets, and home plumbing systems.',
         ]);
 
         Service::create([
             'category_id' => $plumbing->id,
-            'name' => 'แก้ไขท่อน้ำรั่วซึม',
-            'description' => 'ค้นหาจุดรั่วและซ่อมแซมท่อน้ำประปาที่เสียหาย',
+            'name' => 'Leaking Pipe Repair',
+            'description' => 'Locate leak sources and repair damaged water supply pipes.',
             'base_price' => 500.00,
         ]);
 
         Service::create([
             'category_id' => $plumbing->id,
-            'name' => 'ติดตั้งก๊อกน้ำ/อ่างล้างจาน',
-            'description' => 'ติดตั้งหรือเปลี่ยนก๊อกน้ำ ซิงค์ล้างจาน หรือสะดืออ่าง',
+            'name' => 'Faucet / Sink Installation',
+            'description' => 'Install or replace faucets, kitchen sinks, or basin drains.',
             'base_price' => 1200.00,
         ]);
 
@@ -35,20 +35,20 @@ class CategoryAndServiceSeeder extends Seeder
         $electrical = Category::create([
             'name' => 'Electrical',
             'slug' => 'electrical',
-            'description' => 'บริการซ่อมไฟ ตรวจสอบตู้ไฟ และระบบไฟฟ้าภายในบ้าน',
+            'description' => 'Electrical repair, fuse box inspection, and home wiring services.',
         ]);
 
         Service::create([
             'category_id' => $electrical->id,
-            'name' => 'เปลี่ยนสวิตช์/เต้ารับไฟฟ้า',
-            'description' => 'เปลี่ยนเต้าเสียบ สวิตช์ไฟที่ชำรุดเสียหาย เพื่อความปลอดภัย',
+            'name' => 'Switch / Outlet Replacement',
+            'description' => 'Replace damaged outlets or light switches for safety.',
             'base_price' => 350.00,
         ]);
 
         Service::create([
             'category_id' => $electrical->id,
-            'name' => 'เดินสายไฟและติดตั้งโคมไฟจุดใหม่',
-            'description' => 'เดินสายไฟภายใน/ภายนอกอาคาร พร้อมติดตั้งอุปกรณ์ส่องสว่าง',
+            'name' => 'New Wiring & Light Installation',
+            'description' => 'Install new wiring indoor/outdoor and mount light fixtures.',
             'base_price' => 1500.00,
         ]);
 
@@ -56,20 +56,20 @@ class CategoryAndServiceSeeder extends Seeder
         $ac = Category::create([
             'name' => 'AC Repair',
             'slug' => 'ac-repair',
-            'description' => 'บริการล้างแอร์ เติมน้ำยา และซ่อมบำรุงเครื่องปรับอากาศ',
+            'description' => 'Air conditioner washing, refrigerant refilling, and maintenance services.',
         ]);
 
         Service::create([
             'category_id' => $ac->id,
-            'name' => 'ล้างแอร์ติดผนัง (9,000-12,000 BTU)',
-            'description' => 'ล้างทำความสะอาดแอร์ฟิลเตอร์ คอยล์เย็น คอยล์ร้อน ด้วยปั๊มแรงดันสูง',
+            'name' => 'Wall-Mounted AC Cleaning (9,000-12,000 BTU)',
+            'description' => 'Deep clean air filters, indoor coils, and outdoor units using high-pressure pumps.',
             'base_price' => 600.00,
         ]);
 
         Service::create([
             'category_id' => $ac->id,
-            'name' => 'ตรวจเช็คและเติมน้ำยาแอร์ R32',
-            'description' => 'วัดระดับน้ำยาแอร์และเติมเพิ่มเพื่อให้แอร์กลับมาเย็นฉ่ำ',
+            'name' => 'Refrigerant Leak Check & R32 Refill',
+            'description' => 'Check refrigerant levels and refill R32 gas to restore cooling performance.',
             'base_price' => 800.00,
         ]);
     }
