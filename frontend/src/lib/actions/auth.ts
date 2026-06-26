@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { fetchAPI } from '@/lib/api';
+import { redirect } from 'next/navigation';
 
 interface AuthResponse {
   user: {
@@ -101,4 +102,5 @@ export async function logoutAction() {
 
   const cookieStore = await cookies();
   cookieStore.delete('session_token');
+  redirect('/login');
 }
