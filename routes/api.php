@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,7 @@ Route::get('/services/{service_id}/providers', [CatalogController::class, 'getSe
 // ==========================================
 // 2. Auth Routes (Public - สำหรับสมัครสมาชิก/เข้าสู่ระบบ)
 // ==========================================
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // ==========================================

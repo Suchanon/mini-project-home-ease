@@ -2,65 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use App\Services\AuthService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    /**
+     * AuthController constructor.
+     */
+    public function __construct(
+        protected AuthService $authService
+    ) {}
+
+    /**
+     * Authenticate user credentials.
+     */
+    public function login(LoginRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'phone' => 'nullable|string',
-        ]);
-        /** @var User $user */
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-            'phone' => $validated['phone'] ?? null,
-        ]);
+        $result = $this->authService->login($request->validated());
 
-        $token = $user->generateAuthToken();
-
-        return response()->json([
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ], 201);
-    }
-
-    public function login(Request $request)
-    {
-        $validated = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
-        // add password hash check
-        if (! Auth::attempt($validated)) {
+        if (! $result) {
             return response()->json([
                 'message' => 'Email or password not correct naaa',
             ], 401);
         }
 
-        $user = Auth::user();
-        $token = $user->generateAuthToken();
-
-        return response()->json([
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+        return response()->json($result);
     }
 
-    public function logout(Request $request)
+    /**
+     * Log the user out of the application.
+     */
+    public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        /** @var User $user */
+        $user = $request->user();
+        $this->authService->logout($user);
 
         return response()->json([
             'message' => 'Logout Success Naaaa',
