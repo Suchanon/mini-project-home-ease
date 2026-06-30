@@ -24,7 +24,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 2. รัน Seeder สร้างหมวดหมู่และบริการ
-        $this->call(CategoryAndServiceSeeder::class);
+        $this->call([
+            CategorySeeder::class,
+            ServiceSeeder::class,
+        ]);
 
         // 3. ดึงหมวดหมู่ทั้งหมดขึ้นมารอไว้
         $categories = Category::all();

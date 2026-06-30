@@ -1,0 +1,55 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@theme",
+      "description": "Tailwind CSS v4: Define design tokens and custom theme values.",
+      "references": [
+        {
+          "name": "Tailwind CSS v4 Theme",
+          "url": "https://tailwindcss.com/docs/theme"
+        }
+      ]
+    },
+    {
+      "name": "@source",
+      "description": "Tailwind CSS v4: Configure content source paths.",
+      "references": [
+        {
+          "name": "Tailwind CSS v4 Sources",
+          "url": "https://tailwindcss.com/docs/detecting-classes-in-source-files"
+        }
+      ]
+    },
+    {
+      "name": "@utility",
+      "description": "Tailwind CSS v4: Define custom utilities.",
+      "references": [
+        {
+          "name": "Tailwind CSS v4 Utilities",
+          "url": "https://tailwindcss.com/docs/adding-custom-styles#adding-custom-utilities"
+        }
+      ]
+    },
+    {
+      "name": "@variant",
+      "description": "Tailwind CSS v4: Define custom variants.",
+      "references": [
+        {
+          "name": "Tailwind CSS v4 Variants",
+          "url": "https://tailwindcss.com/docs/adding-custom-styles#adding-custom-variants"
+        }
+      ]
+    },
+    {
+      "name": "@plugin",
+      "description": "Tailwind CSS v4: Load a plugin.",
+      "references": [
+        {
+          "name": "Tailwind CSS v4 Plugins",
+          "url": "https://tailwindcss.com/docs/plugins"
+        }
+      ]
+    }
+  ]
+}
